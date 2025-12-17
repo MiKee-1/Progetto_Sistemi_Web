@@ -1,0 +1,53 @@
+.header {
+    background-color: white;
+    max-width: 70%;
+    margin: 0 auto;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.Title {
+    color: black;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.spacer {
+    flex: 1;
+}
+
+mat-icon {
+    color: white;
+    font-weight: bold;
+}
+
+.MenuButton {
+    background-color: #336699;
+    border-color: black;
+    border-width: 3px;
+    color: white;
+    border-radius: 5px;
+    margin: 2px;
+}
+
+button[matIconButton], button[mat-button] {
+    background-color: #336699;
+    border-color: black;
+    border-width: 3px;
+    color: white;
+    border-radius: 5px;
+    margin: 2px;
+
+    mat-icon {
+        vertical-align: middle;
+    }
+}
+
+mat-toolbar {
+    display: flex;
+    justify-content: center;
+}

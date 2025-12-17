@@ -1,0 +1,32 @@
+<!-- app/features/products/product-detail/product-detail-page.html -->
+@if (product$ | async; as product) {
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>{{ product.title }}</mat-card-title>
+        <mat-card-subtitle>
+            @if (product.sale) {
+            <span class="price-original">
+                Prezzo originale:
+                {{ product.originalPrice | currency:'EUR' }}
+            </span>
+            <span class="price-sale">
+                Prezzo scontato:
+                {{ product.price | currency:'EUR' }}
+            </span>
+            } @else {
+            Prezzo:
+            {{ product.price | currency:'EUR' }}
+            }
+        </mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image [src]="product.thumbnail" [alt]="product.title" />
+    <mat-card-content>
+        <p>{{ product.description }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/products">
+            Torna al catalogo
+        </button>
+    </mat-card-actions>
+</mat-card>
+}

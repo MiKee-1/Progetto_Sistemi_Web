@@ -1,0 +1,101 @@
+.admin-dashboard {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  h1 {
+    margin-bottom: 24px;
+  }
+}
+
+.tab-content {
+  padding: 24px 0;
+}
+
+.stats-grid,
+.orders-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+
+  mat-card {
+    text-align: center;
+
+    &.warning-card {
+      background-color: #fff3e0;
+
+      .stat-value {
+        color: #ff6f00;
+      }
+    }
+  }
+
+  .stat-value {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 16px;
+  }
+}
+
+.product-form-card {
+  margin-bottom: 24px;
+
+  .form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    mat-form-field {
+      flex: 1;
+    }
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+  }
+}
+
+.products-table-card,
+.orders-table-card,
+.recent-orders {
+  mat-card-content {
+    padding-top: 16px;
+  }
+
+  table {
+    width: 100%;
+
+    .low-stock {
+      color: #f44336;
+      font-weight: bold;
+    }
+
+    button {
+      margin: 0 4px;
+    }
+
+    small {
+      color: #666;
+      font-size: 12px;
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+mat-form-field {
+  width: 100%;
+}

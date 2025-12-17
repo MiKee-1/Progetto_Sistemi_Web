@@ -1,0 +1,53 @@
+.example-card {
+    max-width: 100%;
+    margin: auto;
+    text-align: center;
+
+    img {
+        max-width: 400px;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .price-container {
+        margin: 1rem 0;
+        position: relative;
+
+        .discount-badge {
+            display: inline-block;
+            background-color: #e53935;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #757575;
+            font-size: 1rem;
+        }
+
+        .sale-price {
+            color: #e53935;
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .regular-price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+        }
+    }
+}
