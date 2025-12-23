@@ -39,6 +39,14 @@ module Api
         render json: { error: 'Order not found' }, status: :not_found
       end
 
+      def delete
+        order = Order.find(params[:id])
+        order.destroy
+        render json: { message: 'Order deleted successfully' }, status: :ok
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: 'Order not found' }, status: :not_found
+      end
+
       # GET /api/admin/stats
       # Statistiche generali
       def stats

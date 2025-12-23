@@ -10,6 +10,13 @@ Rails.application.routes.draw do
     post 'login', to: 'authentication#login'
     get 'me', to: 'authentication#me'
 
+    # Shopping cart routes
+    get 'cart', to: 'carts#show'
+    post 'cart/items', to: 'carts#add_item'
+    patch 'cart/items/:id', to: 'carts#update_item'
+    delete 'cart/items/:id', to: 'carts#remove_item'
+    delete 'cart', to: 'carts#clear'
+
     # Admin routes
     namespace :admin do
       # Product management
@@ -20,7 +27,7 @@ Rails.application.routes.draw do
       end
 
       # Order management and dashboard
-      resources :orders, only: [:index, :show]
+      resources :orders, only: [:index, :show, :destroy] 
       get 'stats', to: 'orders#stats'
     end
   end

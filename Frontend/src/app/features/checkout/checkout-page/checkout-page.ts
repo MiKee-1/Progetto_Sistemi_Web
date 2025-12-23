@@ -6,10 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { CartService } from '../../../core/services/cart';
+import { CartService } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order-service';
-import { map } from 'rxjs/operators';
-import { take } from 'rxjs/operators';
 import { Order } from '../../../core/models/order';
 
 @Component({
@@ -49,11 +47,9 @@ export class CheckoutPage {
   showSummary = false;
   private cart = inject(CartService);
   private orderService = inject(OrderService);
-  readonly items$ = this.cart.list();
-  readonly total$ = this.items$.pipe(
-    map(items => items.reduce(
-      (sum, item) => sum + item.price, 0))
-  );
+  readonly items = this.cart.items;
+  readonly total = this.cart.total;
+  readonly isEmpty = this.cart.isEmpty;
   loading = false;
   orderSuccess = false;
   orderError = false;
@@ -65,30 +61,44 @@ export class CheckoutPage {
       this.focusFirstInvalid();
       return;
     }
+
+    // Check if cart is empty
+    if (this.isEmpty()) {
+      this.orderError = true;
+      return;
+    }
+
     this.loading = true;
     this.orderSuccess = false;
     this.orderError = false;
     const value = this.form.getRawValue();
-    this.items$.pipe(take(1)).subscribe(items => {
-      const order: Order = {
-        customer: value.customer!,
-        address: value.address!,
-        items,
-        total: items.reduce(
-          (sum, it) => sum + it.price, 0),
-        createdAt: new Date().toISOString()
-      };
-      this.orderService.create(order).subscribe({
-        next: () => {
-          this.loading = false;
-          this.orderSuccess = true;
-          this.form.reset();
-        },
-        error: () => {
-          this.loading = false;
-          this.orderError = true;
-        }
-      });
+
+    // Convert cart items to order format
+    const orderItems = this.items().map(item => ({
+      ...item.product,
+      quantity: item.quantity
+    }));
+
+    const order: Order = {
+      customer: value.customer!,
+      address: value.address!,
+      items: orderItems,
+      total: this.total(),
+      createdAt: new Date().toISOString()
+    };
+
+    this.orderService.create(order).subscribe({
+      next: () => {
+        this.loading = false;
+        this.orderSuccess = true;
+        this.form.reset();
+        // Clear cart after successful order
+        this.cart.clearCart().subscribe();
+      },
+      error: () => {
+        this.loading = false;
+        this.orderError = true;
+      }
     });
   }
 

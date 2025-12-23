@@ -60,6 +60,7 @@ export class AdminDashboard implements OnInit {
 
   productsColumns = ['id', 'title', 'price', 'quantity', 'actions'];
   ordersColumns = ['id', 'customer', 'total', 'createdAt', 'actions'];
+  recentOrdersColumns = ['id', 'customer', 'total', 'createdAt'];
 
   constructor() {
     this.productForm = this.fb.group({

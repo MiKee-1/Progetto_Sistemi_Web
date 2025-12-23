@@ -8,6 +8,8 @@ class Product < ApplicationRecord
 
   has_many :order_items, dependent: :destroy, foreign_key: 'product_id'
   has_many :orders, through: :order_items
+  has_many :cart_items, dependent: :destroy, foreign_key: 'product_id'
+  has_many :carts, through: :cart_items
 
   # Metodi helper per inventario
   def in_stock?

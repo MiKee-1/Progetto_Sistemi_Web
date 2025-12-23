@@ -13,6 +13,10 @@ export const routes: Routes = [
         path: 'products', loadComponent:
             () => import('./features/products/product-page/product-page').then(m => m.ProductPage)
     },
+    {
+        path: 'cart', loadComponent:
+            () => import('./features/cart/cart-page/cart-page').then(m => m.CartPage)
+    },
     { path: 'checkout', component: CheckoutPage, canActivate: [checkoutGuardGuard] },
     { path: 'product/:id', component: ProductDetailPage },
     { path: 'login', component: LoginPage },

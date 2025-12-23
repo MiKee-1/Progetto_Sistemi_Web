@@ -16,7 +16,12 @@
       </button>
     }
 
-    <button matIconButton aria-label="Shopping cart" (click)="goToCheckout()">
+    <button matIconButton
+            aria-label="Shopping cart"
+            (click)="goToCart()"
+            [matBadge]="cartItemCount()"
+            [matBadgeHidden]="cartItemCount() === 0"
+            matBadgeColor="warn">
       <mat-icon>shopping_cart</mat-icon>
     </button>
 
@@ -37,10 +42,6 @@
     </mat-menu>
   } @else {
     <!-- User is not logged in -->
-    <button matIconButton aria-label="Shopping cart" (click)="goToCheckout()">
-      <mat-icon>shopping_cart</mat-icon>
-    </button>
-
     <button mat-button (click)="goToLogin()">
       <mat-icon>login</mat-icon>
       Login

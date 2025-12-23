@@ -9,6 +9,9 @@ import { AsyncPipe } from '@angular/common';
 import { BehaviorSubject, combineLatest, map, debounceTime, distinctUntilChanged, startWith } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CartService } from '../../../core/services/cart.service';
+import { Router } from '@angular/router';
 
 type Sort = 'priceAsc' | 'priceDesc' | 'dateAsc' | 'dateDesc';
 const cmp = (s: Sort) => (a: Product, b: Product) =>
@@ -19,12 +22,15 @@ const cmp = (s: Sort) => (a: Product, b: Product) =>
 
 @Component({
   selector: 'app-product-page',
-  imports: [ProductCard, FormsModule, MatPaginatorModule, MatFormFieldModule, MatInput, MatLabel, MatSelectModule, AsyncPipe],
+  imports: [ProductCard, FormsModule, MatPaginatorModule, MatFormFieldModule, MatInput, MatLabel, MatSelectModule, AsyncPipe, MatSnackBarModule],
   templateUrl: './product-page.html',
   styleUrl: './product-page.scss',
 })
 export class ProductPage {
   private service = inject(ProductApi);
+  private cartService = inject(CartService);
+  private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
   protected readonly products$ = this.service.list();
 
 
@@ -85,7 +91,47 @@ export class ProductPage {
   }
 
   onAddToCart(product: Product) {
-    console.log('Aggiunto al carrello:', product);
+    // Check stock availability
+    if (!product.inStock || product.quantity === 0) {
+      this.snackBar.open('This product is out of stock', 'Close', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+
+    this.cartService.addToCart(product.id).subscribe({
+      next: () => {
+        this.snackBar.open(`${product.title} added to cart`, 'View Cart', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        }).onAction().subscribe(() => {
+          // Navigate to cart when "View Cart" is clicked
+          this.router.navigate(['/cart']);
+        });
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.snackBar.open('Please login to add items to cart', 'Login', {
+            duration: 5000
+          }).onAction().subscribe(() => {
+            this.router.navigate(['/login'], {
+              queryParams: { returnUrl: this.router.url }
+            });
+          });
+        } else {
+          this.snackBar.open(
+            err.error?.error || 'Failed to add to cart',
+            'Close',
+            {
+              duration: 3000,
+              panelClass: ['error-snackbar']
+            }
+          );
+        }
+      }
+    });
   }
   updateSort(sort: Sort) {
     this.filters$.next({ ...this.filters$.value, sort: sort });
