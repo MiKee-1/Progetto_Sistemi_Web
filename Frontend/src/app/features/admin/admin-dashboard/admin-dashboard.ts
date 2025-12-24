@@ -197,4 +197,17 @@ export class AdminDashboard implements OnInit {
     });
     this.editingProduct.set(null);
   }
+
+  // Orders Management
+  onDeleteOrder(id: number): void {
+    if (confirm('Are you sure you want to delete this order?')) {
+      this.adminService.deleteOrder(id).subscribe({
+        next: () => {
+          this.loadOrders();
+          this.loadStats();
+        },
+        error: (err) => console.error('Error deleting order:', err),
+      });
+    }
+  }
 }

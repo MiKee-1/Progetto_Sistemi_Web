@@ -68,6 +68,10 @@ export class AdminService {
     return this.http.get<any>(`${this.baseUrl}/orders/${id}`);
   }
 
+  deleteOrder(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.baseUrl}/orders/${id}`);
+  }
+
   // Stats
   getStats(): Observable<AdminStats> {
     return this.http.get<AdminStats>(`${this.baseUrl}/stats`);

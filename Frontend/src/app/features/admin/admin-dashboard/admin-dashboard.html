@@ -303,7 +303,7 @@
                 <ng-container matColumnDef="actions">
                   <th mat-header-cell *matHeaderCellDef>Actions</th>
                   <td mat-cell *matCellDef="let order">
-                    <button mat-icon-button title="Delete">
+                    <button mat-icon-button color="warn" (click)="onDeleteOrder(order.id)" title="Delete">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </td>

@@ -39,7 +39,7 @@ module Api
         render json: { error: 'Order not found' }, status: :not_found
       end
 
-      def delete
+      def destroy
         order = Order.find(params[:id])
         order.destroy
         render json: { message: 'Order deleted successfully' }, status: :ok
