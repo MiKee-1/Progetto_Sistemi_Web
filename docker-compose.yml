@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=development
+    volumes:
+      - ./Backend:/rails
+      - backend_bundle:/usr/local/bundle
+    stdin_open: true
+    tty: true
+
+  frontend:
+    build: ./Frontend
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./Frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  backend_bundle:
