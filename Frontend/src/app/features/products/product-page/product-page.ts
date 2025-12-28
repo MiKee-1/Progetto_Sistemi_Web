@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { AsyncPipe } from '@angular/common';
-import { BehaviorSubject, combineLatest, map, debounceTime, distinctUntilChanged, startWith } from 'rxjs';
+import { BehaviorSubject, map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -14,11 +14,6 @@ import { CartService } from '../../../core/services/cart.service';
 import { Router } from '@angular/router';
 
 type Sort = 'priceAsc' | 'priceDesc' | 'dateAsc' | 'dateDesc';
-const cmp = (s: Sort) => (a: Product, b: Product) =>
-  s === 'priceAsc' ? a.price - b.price :
-    s === 'priceDesc' ? b.price - a.price :
-      s === 'dateAsc' ? a.createdAt.localeCompare(b.createdAt) :
-        b.createdAt.localeCompare(a.createdAt);
 
 @Component({
   selector: 'app-product-page',
@@ -31,62 +26,64 @@ export class ProductPage {
   private cartService = inject(CartService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
-  protected readonly products$ = this.service.list();
 
-
-  private filters$ = new BehaviorSubject({
+  protected filters$ = new BehaviorSubject({
     title: '',
     sort: 'dateDesc' as Sort,
-    priceMin: '0',
-    priceMax: '10000',
-  })
+    priceMin: '',
+    priceMax: '',
+  });
 
-  title$ = this.filters$.pipe(
-    map(f => f.title),
-    debounceTime(200),
-    distinctUntilChanged(),
-    startWith(this.filters$.value.title)
-  );
+  // Observable for current sort value
+  protected currentSort$ = this.filters$.pipe(map(f => f.sort));
 
-  filteredProducts$ = combineLatest([
-    this.products$,
-    this.filters$,
-    this.title$
-  ]).pipe(
-    map(([products, filters, title]) => products.filter(product => {
-      const matchesTitle =
-        !title || product.title.toLowerCase().includes(title.toLowerCase());
-      const matchesPriceMin =
-        !filters.priceMin || product.price >= Number(filters.priceMin);
-      const matchesPriceMax =
-        !filters.priceMax || product.price <= Number(filters.priceMax);
-      return matchesTitle && matchesPriceMin && matchesPriceMax;
+  // Convert frontend sort format to backend format
+  private mapSortToBackend(sort: Sort): 'price_asc' | 'price_desc' | 'date_asc' | 'date_desc' {
+    const sortMap = {
+      'priceAsc': 'price_asc',
+      'priceDesc': 'price_desc',
+      'dateAsc': 'date_asc',
+      'dateDesc': 'date_desc'
+    } as const;
+    return sortMap[sort];
+  }
+
+  // Products filtered by backend
+  filteredProducts$ = this.filters$.pipe(
+    debounceTime(300),
+    distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
+    switchMap(filters => {
+      return this.service.list({
+        title: filters.title || undefined,
+        minPrice: filters.priceMin ? Number(filters.priceMin) : undefined,
+        maxPrice: filters.priceMax ? Number(filters.priceMax) : undefined,
+        sort: this.mapSortToBackend(filters.sort)
+      });
     })
-      .toSorted(cmp(filters.sort))
-    )
   );
 
   page$ = new BehaviorSubject(1);
   pageSize = 10;
-  paged$ = combineLatest([this.filteredProducts$, this.page$]).pipe(
-    map(([items, page]) => {
+  paged$ = this.filteredProducts$.pipe(
+    map((items) => {
+      const page = this.page$.value;
       const start = (page - 1) * this.pageSize;
       const end = start + this.pageSize;
       return items.slice(start, end);
     })
   );
   updateTitle(title: string) {
-    console.log('Filtri applicati:');
+    this.page$.next(1); // Reset to first page when filters change
     this.filters$.next({ ...this.filters$.value, title: title });
   }
 
   updateMin(min: string) {
-    console.log('Filtri applicati:');
+    this.page$.next(1); // Reset to first page when filters change
     this.filters$.next({ ...this.filters$.value, priceMin: min });
   }
 
   updateMax(max: string) {
-    console.log('Filtri applicati:');
+    this.page$.next(1); // Reset to first page when filters change
     this.filters$.next({ ...this.filters$.value, priceMax: max });
   }
 
@@ -134,6 +131,7 @@ export class ProductPage {
     });
   }
   updateSort(sort: Sort) {
+    this.page$.next(1); // Reset to first page when sort changes
     this.filters$.next({ ...this.filters$.value, sort: sort });
   }
   onPage(e: PageEvent) {

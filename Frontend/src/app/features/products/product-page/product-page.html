@@ -11,7 +11,7 @@
         </mat-form-field>
         <mat-form-field class="example-form-field">
             <mat-label>Ordina per</mat-label>
-            <mat-select (selectionChange)="updateSort($any($event.value))">
+            <mat-select [value]="currentSort$ | async" (selectionChange)="updateSort($any($event.value))">
                 <mat-option value="priceAsc">Prezzo (Crescente)</mat-option>
                 <mat-option value="priceDesc">Prezzo (Decrescente)</mat-option>
                 <mat-option value="dateAsc">Data (Crescente)</mat-option>
