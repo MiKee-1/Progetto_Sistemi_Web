@@ -25,11 +25,12 @@ export class CartService {
   total = computed(() => this.cartSignal()?.total ?? 0);
   items = computed(() => this.cartSignal()?.items ?? []);
   isEmpty = computed(() => (this.cartSignal()?.items?.length ?? 0) === 0);
-  authService: any;
 
-  constructor(private http: HttpClient) {
-    // Load cart on service initialization if user is authenticated
-    this.loadCart();
+  constructor(private http: HttpClient, private authService: AuthService) {
+    // Load cart only if user is authenticated
+    if (this.authService.isLoggedIn()) {
+      this.loadCart();
+    }
   }
 
   /**
@@ -45,8 +46,11 @@ export class CartService {
         this.loadingSignal.set(false);
       }),
       catchError(error => {
-        console.error('Failed to load cart:', error);
-        this.errorSignal.set('Failed to load cart');
+        // Don't show error for 401 (not authenticated) - it's expected behavior
+        if (error.status !== 401) {
+          console.error('Failed to load cart:', error);
+          this.errorSignal.set('Failed to load cart');
+        }
         this.loadingSignal.set(false);
         // Return empty cart structure on error
         return of(null);

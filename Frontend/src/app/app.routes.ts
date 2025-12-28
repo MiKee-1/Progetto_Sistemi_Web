@@ -6,6 +6,7 @@ import { LoginPage } from './features/auth/login-page/login-page';
 import { RegisterPage } from './features/auth/register-page/register-page';
 import { AdminDashboard } from './features/admin/admin-dashboard/admin-dashboard';
 import { adminGuard } from './core/guard/admin.guard';
+import { authGuard } from './core/guard/auth.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'products', pathMatch: 'full' },
@@ -14,8 +15,9 @@ export const routes: Routes = [
             () => import('./features/products/product-page/product-page').then(m => m.ProductPage)
     },
     {
-        path: 'cart', loadComponent:
-            () => import('./features/cart/cart-page/cart-page').then(m => m.CartPage)
+        path: 'cart',
+        loadComponent: () => import('./features/cart/cart-page/cart-page').then(m => m.CartPage),
+        canActivate: [authGuard]
     },
     { path: 'checkout', component: CheckoutPage, canActivate: [checkoutGuardGuard] },
     { path: 'product/:id', component: ProductDetailPage },

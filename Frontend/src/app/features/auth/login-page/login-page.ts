@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
+import { CartService } from '../../../core/services/cart.service';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -30,6 +31,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 export class LoginPage {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private cartService = inject(CartService);
   private router = inject(Router);
 
   loginForm: FormGroup;
@@ -51,6 +53,8 @@ export class LoginPage {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           this.loading.set(false);
+          // Load cart after successful login
+          this.cartService.loadCart();
           // Redirect based on role
           if (response.user.role === 'admin') {
             this.router.navigate(['/admin']);
