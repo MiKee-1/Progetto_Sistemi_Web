@@ -205,6 +205,7 @@ export class AdminDashboard implements OnInit {
         next: () => {
           this.loadOrders();
           this.loadStats();
+          this.loadProducts(); // Ricarica i prodotti per mostrare le quantità ripristinate
         },
         error: (err) => console.error('Error deleting order:', err),
       });

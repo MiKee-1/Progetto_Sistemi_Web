@@ -80,14 +80,33 @@
     <mat-checkbox formControlName="privacy" required>
         Accetto i termini e le condizioni
     </mat-checkbox>
-    <button mat-raised-button color="primary" type="submit">
-        Completa l'ordine
+    <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+        @if(loading) {
+            Elaborazione in corso...
+        } @else {
+            Completa l'ordine
+        }
     </button>
-    @if(form.invalid && showSummary)
-    {
+
+    @if(orderSuccess) {
+    <div class="success-message" role="status" aria-live="polite">
+        <p>
+            Ordine completato con successo! Grazie per il tuo acquisto.
+        </p>
+    </div>
+    }
+
+    @if(orderError && errorMessage) {
+    <div class="error-message" role="alert" aria-live="assertive">
+        <p>{{ errorMessage }}</p>
+    </div>
+    }
+
+    @if(form.invalid && showSummary) {
     <div class="error-summary" role="status" aria-live="polite">
         <p>
             Il form contiene errori. Controlla i campi evidenziati.
         </p>
-    </div>}
+    </div>
+    }
 </form>

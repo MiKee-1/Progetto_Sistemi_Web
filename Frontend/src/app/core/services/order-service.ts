@@ -11,6 +11,7 @@ export class OrderService {
   private readonly baseUrl = 'http://localhost:3000/api';
 
   create(order: Order): Observable<Order> {
-    return this.http.post<Order>(`${this.baseUrl}/orders`, order);
+    // Rails expects the data wrapped in an 'order' object
+    return this.http.post<Order>(`${this.baseUrl}/orders`, { order });
   }
 }

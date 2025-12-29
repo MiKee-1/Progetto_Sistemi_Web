@@ -9,6 +9,26 @@ class Order < ApplicationRecord
 
   accepts_nested_attributes_for :order_items
 
+  # Ripristina le quantità dei prodotti quando l'ordine viene eliminato
+  before_destroy :restore_product_quantities, prepend: true
+
+  private
+
+  def restore_product_quantities
+    # Reload per assicurarsi di avere i dati aggiornati
+    order_items.reload.each do |order_item|
+      product = order_item.product
+      if product
+        Rails.logger.info "Restoring product #{product.id} (#{product.title}): #{product.quantity} + #{order_item.quantity}"
+        new_quantity = product.quantity + order_item.quantity
+        product.update!(quantity: new_quantity)
+        Rails.logger.info "New quantity: #{product.reload.quantity}"
+      end
+    end
+  end
+
+  public
+
   def as_json(options = {})
     base = {
       id: id,

@@ -53,6 +53,7 @@ export class CheckoutPage {
   loading = false;
   orderSuccess = false;
   orderError = false;
+  errorMessage = '';
 
   onSubmit(): void {
     if (this.form.invalid) {
@@ -65,12 +66,14 @@ export class CheckoutPage {
     // Check if cart is empty
     if (this.isEmpty()) {
       this.orderError = true;
+      this.errorMessage = 'Il carrello è vuoto. Aggiungi dei prodotti prima di procedere.';
       return;
     }
 
     this.loading = true;
     this.orderSuccess = false;
     this.orderError = false;
+    this.errorMessage = '';
     const value = this.form.getRawValue();
 
     // Convert cart items to order format
@@ -91,13 +94,18 @@ export class CheckoutPage {
       next: () => {
         this.loading = false;
         this.orderSuccess = true;
+        this.orderError = false;
+        this.errorMessage = '';
         this.form.reset();
         // Clear cart after successful order
         this.cart.clearCart().subscribe();
       },
-      error: () => {
+      error: (error) => {
         this.loading = false;
+        this.orderSuccess = false;
         this.orderError = true;
+        // Extract error message from backend response
+        this.errorMessage = error.error?.error || error.error?.errors?.[0] || 'Si è verificato un errore durante la creazione dell\'ordine. Riprova.';
       }
     });
   }
