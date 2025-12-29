@@ -58,7 +58,7 @@ git clone https://github.com/MiKee-1/Progetto_Sistemi_Web
 cd Progetto_Sistemi_Web
 ```
 
-### 2. Avvio con Docker (Raccomandato)
+### 2. Avvio con Docker
 
 #### Step 1: Build e avvio dei container
 
@@ -129,46 +129,6 @@ docker exec progetto_sistemi_web-backend-1 bin/rails db:reset
 
 ---
 
-### 3. Avvio Manuale (Alternativa)
-
-#### Setup Backend
-
-```bash
-cd Backend
-
-# Installa dipendenze
-bundle install
-
-# Setup database
-rails db:create
-rails db:migrate
-rails db:seed
-
-# Avvia server (porta 3000)
-rails server
-```
-
-Il backend sarà disponibile su: http://localhost:3000
-
-**Seed Data:**
-Il comando `rails db:seed` crea:
-- 1 Admin: `admin@example.com` / `password123`
-- 2 Utenti: `user@example.com` / `password123`, `user2@example.com` / `password123`
-- Circa 50 prodotti di esempio importati da `Frontend/shop-mock-api/db.json`
-
-#### Setup Frontend
-
-```bash
-cd ../Frontend
-
-# Installa dipendenze
-npm install
-
-# Avvia development server (porta 4200)
-ng serve
-```
-
-Il frontend sarà disponibile su: http://localhost:4200
 
 ## Utilizzo Applicazione
 
