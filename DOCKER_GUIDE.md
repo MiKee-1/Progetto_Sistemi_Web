@@ -1,13 +1,9 @@
 # Guida Docker per Progetto Sistemi Web
 
-## Problema Risolto
-
-Il progetto è stato configurato per eseguire **tutto dentro Docker** con i permessi corretti. Questo elimina i problemi di "readonly database" e garantisce che tutti i file creati dal container abbiano i permessi giusti (UID 1000:1000 = mike:mike).
-
 ## Come Funziona
 
 ### Configurazione
-- **Dockerfile.dev**: Il container esegue come user `rails` con UID/GID 1000 (stesso del tuo utente host)
+- **Dockerfile.dev**: Il container esegue come user `rails` con UID/GID 1000
 - **docker-compose.yml**: Configura il mapping UID/GID per garantire permessi corretti
 - **Volumi**: `./Backend:/rails` monta il codice, permettendo live-reload durante lo sviluppo
 
@@ -106,7 +102,7 @@ docker compose logs -f backend
 docker compose restart backend
 ```
 
-### 4. Fine Giornata
+### 4. Fine e Terminazione Container
 ```bash
 docker compose down
 ```
@@ -162,14 +158,6 @@ docker compose up -d
 2. **Commit regolari**: Non committare file come `log/*.log` o `storage/*.sqlite3`
 3. **Environment**: Assicurati che `RAILS_ENV=development` nel docker-compose.yml
 4. **Rebuild quando necessario**: Dopo modifiche a Dockerfile o Gemfile, ricostruisci l'immagine
-
-## Vantaggi di Questo Approccio
-
-- **Ambiente consistente**: Tutti i developer hanno la stessa versione di Ruby, Rails, gems
-- **Zero setup locale**: Non serve installare Ruby/Rails sull'host
-- **Permessi corretti**: Nessun problema di "readonly database"
-- **Isolamento**: Il progetto non interferisce con altri progetti Ruby
-- **Portabilità**: Funziona identicamente su Linux, macOS, Windows (con WSL2)
 
 ## File Modificati
 
