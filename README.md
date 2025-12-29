@@ -3,11 +3,6 @@
 
 Applicazione e-commerce completa sviluppata con Angular (frontend) e Ruby on Rails (backend API).
 
-## Studente
-- **Nome:** [Nome Cognome]
-- **Matricola:** [Numero]
-- **Email:** [email@studenti.unipd.it]
-
 ## Tecnologie Utilizzate
 
 ### Backend
@@ -46,8 +41,8 @@ ng version     # 21.x.x
 ## Setup Progetto
 
 ### 1. Clone Repository
-```bash
-git clone [URL_REPOSITORY]
+```bash[
+git clone https://github.com/MiKee-1/Progetto_Sistemi_Web
 cd Progetto_Sistemi_Web
 ```
 
@@ -74,7 +69,7 @@ Il backend sarà disponibile su: http://localhost:3000
 Il comando `rails db:seed` crea:
 - 1 Admin: `admin@example.com` / `password123`
 - 2 Utenti: `user@example.com` / `password123`, `user2@example.com` / `password123`
-- Circa 30 prodotti di esempio importati da `Frontend/shop-mock-api/db.json`
+- Circa 50 prodotti di esempio importati da `Frontend/shop-mock-api/db.json`
 
 ### 3. Setup Frontend
 
@@ -278,9 +273,7 @@ Dashboard completa con:
   - Backend: `before_action :require_admin!`
   - Frontend: `adminGuard` su route `/admin`
 
-### 2. [WISHLIST / INTERNAZIONALIZZAZIONE] ✅
-
-[Inserire qui descrizione dettagliata della funzionalità scelta]
+### 2. [WISHLIST]
 
 #### Wishlist (se scelta)
 - Possibilità per utenti registrati di salvare prodotti preferiti
@@ -289,15 +282,7 @@ Dashboard completa con:
 - Funzioni: aggiungi, rimuovi, visualizza, svuota wishlist
 - Badge counter su header
 
-#### Internazionalizzazione (se scelta)
-- Supporto 2 lingue: Italiano (default) + Inglese
-- Backend: Rails i18n con locale files (it.yml, en.yml)
-- Frontend: Angular i18n con build separati
-- Language switcher in header
-- Messaggi errore, label form, UI tradotti
-- Header `Accept-Language` inviato automaticamente
-
-## Testing
+## Testing (da implementare)
 
 ### Backend Tests (RSpec)
 
