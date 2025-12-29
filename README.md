@@ -80,12 +80,14 @@ Questo comando:
 In un **nuovo terminale**, esegui:
 
 ```bash
+# Avvio del container Backend
+docker compose up -d backend
 # Crea il database e le tabelle
-docker exec progetto_sistemi_web-backend-1 bin/rails db:create
-docker exec progetto_sistemi_web-backend-1 bin/rails db:migrate
-
-# Popola il database con dati di esempio
-docker exec progetto_sistemi_web-backend-1 bin/rails db:seed
+./bin/docker-rails db:create
+./bin/docker-rails db:migrate
+./bin/docker-rails db:seed
+# Kill container Backend
+docker compose down
 ```
 
 Il seed crea:
