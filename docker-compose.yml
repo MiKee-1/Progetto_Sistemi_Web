@@ -15,6 +15,7 @@ services:
       - RAILS_ENV=development
     volumes:
       - ./Backend:/rails
+      - ./Frontend:/Frontend:ro
       - backend_bundle:/usr/local/bundle
     stdin_open: true
     tty: true

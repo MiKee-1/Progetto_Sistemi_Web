@@ -20,7 +20,18 @@ Applicazione e-commerce completa sviluppata con Angular (frontend) e Ruby on Rai
 
 ## Prerequisiti Software
 
-Prima di iniziare, assicurati di avere installato:
+### Opzione 1: Con Docker (Raccomandato)
+
+- **Docker:** versione 20.x o superiore
+- **Docker Compose:** versione 2.x o superiore
+
+Verifica versioni:
+```bash
+docker --version          # Docker version 20.x.x o superiore
+docker compose version    # Docker Compose version 2.x.x o superiore
+```
+
+### Opzione 2: Installazione Manuale
 
 - **Ruby:** versione 3.4.7 (consigliato gestione con rbenv/rvm)
 - **Rails:** versione 8.1.1 (`gem install rails -v 8.1.1`)
@@ -41,12 +52,86 @@ ng version     # 21.x.x
 ## Setup Progetto
 
 ### 1. Clone Repository
-```bash[
+
+```bash
 git clone https://github.com/MiKee-1/Progetto_Sistemi_Web
 cd Progetto_Sistemi_Web
 ```
 
-### 2. Setup Backend
+### 2. Avvio con Docker (Raccomandato)
+
+#### Step 1: Build e avvio dei container
+
+```bash
+# Build delle immagini e avvio dei container
+docker compose up --build
+```
+
+Questo comando:
+- Compila le immagini Docker per backend e frontend
+- Avvia i container in modalità attached (vedrai i log)
+- Il backend sarà disponibile su: http://localhost:3000
+- Il frontend sarà disponibile su: http://localhost:4200
+
+**Nota:** Al primo avvio, attendi che Angular compili completamente (vedrai "Compiled successfully" nei log).
+
+#### Step 2: Setup del database (solo al primo avvio)
+
+In un **nuovo terminale**, esegui:
+
+```bash
+# Crea il database e le tabelle
+docker exec progetto_sistemi_web-backend-1 bin/rails db:create
+docker exec progetto_sistemi_web-backend-1 bin/rails db:migrate
+
+# Popola il database con dati di esempio
+docker exec progetto_sistemi_web-backend-1 bin/rails db:seed
+```
+
+Il seed crea:
+- **1 Admin:** `admin@example.com` / `password123`
+- **2 Utenti:** `user@example.com` / `password123`, `user2@example.com` / `password123`
+- **~50 Prodotti** importati da `Frontend/shop-mock-api/db.json`
+
+#### Step 3: Verifica installazione
+
+Apri il browser su http://localhost:4200 - dovresti vedere la homepage con i prodotti caricati.
+
+#### Comandi Docker Utili
+
+```bash
+# Avvio container (dopo il primo build)
+docker compose up
+
+# Avvio in background (detached mode)
+docker compose up -d
+
+# Stop dei container
+docker compose down
+
+# Visualizza log
+docker compose logs -f
+
+# Riavvia un singolo servizio
+docker compose restart backend
+docker compose restart frontend
+
+# Accedi alla shell del container backend
+docker exec -it progetto_sistemi_web-backend-1 bash
+
+# Esegui comandi Rails
+docker exec progetto_sistemi_web-backend-1 bin/rails console
+docker exec progetto_sistemi_web-backend-1 bin/rails routes
+
+# Reset completo del database
+docker exec progetto_sistemi_web-backend-1 bin/rails db:reset
+```
+
+---
+
+### 3. Avvio Manuale (Alternativa)
+
+#### Setup Backend
 
 ```bash
 cd Backend
@@ -71,7 +156,7 @@ Il comando `rails db:seed` crea:
 - 2 Utenti: `user@example.com` / `password123`, `user2@example.com` / `password123`
 - Circa 50 prodotti di esempio importati da `Frontend/shop-mock-api/db.json`
 
-### 3. Setup Frontend
+#### Setup Frontend
 
 ```bash
 cd ../Frontend
@@ -343,12 +428,61 @@ ng build --configuration production
 # Output in dist/frontend
 ```
 
-## Docker (Opzionale)
+## Troubleshooting
 
+### I prodotti non vengono mostrati
+
+**Causa:** Il database non è stato popolato con il seed.
+
+**Soluzione:**
 ```bash
-# Avvia tutto con Docker Compose
-docker-compose up
+# Con Docker
+docker exec progetto_sistemi_web-backend-1 bin/rails db:seed
 
-# Backend: http://localhost:3000
-# Frontend: http://localhost:4200
+# Verifica che i prodotti siano stati caricati
+docker exec progetto_sistemi_web-backend-1 bin/rails runner "puts Product.count"
+
+# Manuale
+cd Backend
+rails db:seed
+```
+
+### Errore "Mock data file not found"
+
+**Causa:** Il container backend non riesce a trovare il file `Frontend/shop-mock-api/db.json`.
+
+**Soluzione:** Verifica che il file esista e che il volume sia montato correttamente in `docker-compose.yml`:
+```yaml
+volumes:
+  - ./Backend:/rails
+  - ./Frontend:/Frontend:ro  # Questa riga deve essere presente
+```
+
+Se hai modificato il `docker-compose.yml`, riavvia i container:
+```bash
+docker compose down
+docker compose up --build
+```
+
+### Il frontend non si connette al backend
+
+**Causa:** Problemi di CORS o backend non raggiungibile.
+
+**Soluzione:**
+1. Verifica che il backend sia in esecuzione su http://localhost:3000
+2. Controlla la configurazione in `Frontend/src/app/core/services/product-api.ts`
+3. Verifica CORS in `Backend/config/initializers/cors.rb`
+
+### Permessi negati su Docker
+
+**Causa:** Problemi di permessi sui file di volume.
+
+**Soluzione:**
+```bash
+# Dai i permessi corretti alle directory
+sudo chown -R $USER:$USER Backend Frontend
+
+# Riavvia i container
+docker compose down
+docker compose up
 ```
