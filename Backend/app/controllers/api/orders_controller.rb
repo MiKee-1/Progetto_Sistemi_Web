@@ -95,9 +95,10 @@ module Api
   def order_params
     params.require(:order).permit(
       :total,
+      :createdAt,
       customer: [:firstName, :lastName, :email],
       address: [:street, :city, :zip],
-      items: [:id, :title, :price, :originalPrice, :sale, :thumbnail, :createdAt, :description, :quantity, tags: []]
+      items: [:id, :title, :price, :originalPrice, :sale, :thumbnail, :createdAt, :description, :quantity, :inStock, tags: []]
     )
   end
   end
