@@ -1,2 +1,369 @@
 # Progetto_Sistemi_Web
-simple e-commerce with backend in Ruby and frontend using Angular
+# E-Commerce Full-Stack - Progetto Sistemi Web 2025/2026
+
+Applicazione e-commerce completa sviluppata con Angular (frontend) e Ruby on Rails (backend API).
+
+## Studente
+- **Nome:** [Nome Cognome]
+- **Matricola:** [Numero]
+- **Email:** [email@studenti.unipd.it]
+
+## Tecnologie Utilizzate
+
+### Backend
+- Ruby 3.4.7
+- Rails 8.1.1 (API mode)
+- SQLite3 (development), PostgreSQL (production recommended)
+- JWT per autenticazione
+- RSpec per testing
+
+### Frontend
+- Angular 21
+- TypeScript 5.7
+- Angular Material 21
+- RxJS con Signals
+
+## Prerequisiti Software
+
+Prima di iniziare, assicurati di avere installato:
+
+- **Ruby:** versione 3.4.7 (consigliato gestione con rbenv/rvm)
+- **Rails:** versione 8.1.1 (`gem install rails -v 8.1.1`)
+- **Node.js:** versione 20.x o superiore
+- **npm:** versione 10.x o superiore
+- **Angular CLI:** versione 21.x (`npm install -g @angular/cli@21`)
+- **SQLite3:** (generalmente già incluso in macOS/Linux)
+
+Verifica versioni:
+```bash
+ruby -v        # 3.4.7
+rails -v       # 8.1.1
+node -v        # v20.x.x
+npm -v         # 10.x.x
+ng version     # 21.x.x
+```
+
+## Setup Progetto
+
+### 1. Clone Repository
+```bash
+git clone [URL_REPOSITORY]
+cd Progetto_Sistemi_Web
+```
+
+### 2. Setup Backend
+
+```bash
+cd Backend
+
+# Installa dipendenze
+bundle install
+
+# Setup database
+rails db:create
+rails db:migrate
+rails db:seed
+
+# Avvia server (porta 3000)
+rails server
+```
+
+Il backend sarà disponibile su: http://localhost:3000
+
+**Seed Data:**
+Il comando `rails db:seed` crea:
+- 1 Admin: `admin@example.com` / `password123`
+- 2 Utenti: `user@example.com` / `password123`, `user2@example.com` / `password123`
+- Circa 30 prodotti di esempio importati da `Frontend/shop-mock-api/db.json`
+
+### 3. Setup Frontend
+
+```bash
+cd ../Frontend
+
+# Installa dipendenze
+npm install
+
+# Avvia development server (porta 4200)
+ng serve
+```
+
+Il frontend sarà disponibile su: http://localhost:4200
+
+## Utilizzo Applicazione
+
+### Utente Normale
+
+1. **Registrazione:**
+   - Vai su http://localhost:4200/register
+   - Compila form: nome, cognome, email, indirizzo, password
+
+2. **Login:**
+   - Vai su http://localhost:4200/login
+   - Credenziali demo: `user@example.com` / `password123`
+
+3. **Shopping:**
+   - Browse prodotti: filtra per titolo, prezzo, ordina
+   - Aggiungi al carrello
+   - Visualizza carrello: modifica quantità, rimuovi articoli
+   - Checkout: compila dati spedizione, conferma ordine
+   - Visualizza storico ordini
+
+### Amministratore
+
+1. **Login Admin:**
+   - Email: `admin@example.com`
+   - Password: `password123`
+
+2. **Dashboard Admin:**
+   - Statistiche: ordini totali, revenue, utenti, prodotti, low stock
+   - Gestione Prodotti: CRUD completo (crea, modifica, elimina)
+   - Gestione Inventario: increment/decrement quantità
+   - Visualizzazione Ordini: tutti gli ordini con dettagli
+   - Cancellazione Ordini
+
+## Architettura Applicazione
+
+### Modelli Database
+
+```
+users
+├── id (integer)
+├── email (string, unique)
+├── password_digest (string) - BCrypt hash
+├── first_name (string)
+├── last_name (string)
+├── address (string)
+├── role (string: 'user' | 'admin')
+└── timestamps
+
+products
+├── id (string, primary key)
+├── title (string)
+├── description (text)
+├── price (decimal)
+├── original_price (decimal)
+├── sale (boolean)
+├── thumbnail (string - URL)
+├── tags (json)
+├── quantity (integer)
+└── timestamps
+
+carts
+├── id (integer)
+├── user_id (integer, foreign key)
+├── expires_at (datetime)
+└── timestamps
+
+cart_items
+├── id (integer)
+├── cart_id (integer, foreign key)
+├── product_id (string, foreign key)
+├── quantity (integer)
+├── unit_price (decimal)
+└── timestamps
+└── UNIQUE INDEX (cart_id, product_id)
+
+orders
+├── id (integer)
+├── user_id (integer, foreign key, nullable)
+├── customer (json: {firstName, lastName, email})
+├── address (json: {street, city, zip})
+├── total (decimal)
+└── timestamps
+
+order_items
+├── id (integer)
+├── order_id (integer, foreign key)
+├── product_id (string, foreign key)
+├── quantity (integer)
+├── unit_price (decimal)
+└── timestamps
+```
+
+### API Endpoints
+
+#### Pubblici
+- `GET /api/products` - Lista prodotti (filtri opzionali: tag, q, page, per_page)
+- `GET /api/products/:id` - Dettaglio prodotto
+- `POST /api/register` - Registrazione utente
+- `POST /api/login` - Login (restituisce JWT token)
+
+#### Autenticati (richiede header Authorization: Bearer <token>)
+- `GET /api/me` - Profilo utente corrente
+- `GET /api/cart` - Visualizza carrello
+- `POST /api/cart/items` - Aggiungi prodotto al carrello
+- `PATCH /api/cart/items/:id` - Aggiorna quantità
+- `DELETE /api/cart/items/:id` - Rimuovi articolo
+- `DELETE /api/cart` - Svuota carrello
+- `GET /api/orders` - Lista ordini (utente vede solo i propri, admin vede tutti)
+- `POST /api/orders` - Crea ordine da carrello
+
+#### Admin (richiede ruolo admin)
+- `POST /api/admin/products` - Crea prodotto
+- `PUT/PATCH /api/admin/products/:id` - Aggiorna prodotto
+- `DELETE /api/admin/products/:id` - Elimina prodotto
+- `PATCH /api/admin/products/:id/adjust_quantity` - Aggiusta inventario
+- `GET /api/admin/orders` - Lista tutti ordini con statistiche
+- `GET /api/admin/orders/:id` - Dettaglio ordine
+- `DELETE /api/admin/orders/:id` - Elimina ordine
+- `GET /api/admin/stats` - Statistiche dashboard
+
+### Flusso Autenticazione
+
+1. **Registrazione/Login:**
+   - Frontend invia credenziali a `POST /api/login`
+   - Backend valida credenziali e genera JWT token
+   - Token contiene: `{ user_id, role, exp: 24h }`
+   - Frontend salva token in localStorage
+
+2. **Richieste Autenticate:**
+   - HttpInterceptor aggiunge automaticamente header: `Authorization: Bearer <token>`
+   - Backend verifica token tramite `ApplicationController#authenticate_request`
+   - Se valido, imposta `@current_user`
+
+3. **Protezione Route:**
+   - Backend: `before_action :require_authentication!` e `require_admin!`
+   - Frontend: Guards `checkoutGuardGuard`, `adminGuard`
+
+### Flusso Carrello → Checkout → Ordine
+
+1. **Aggiunta Carrello:**
+   - Utente clicca "Add to Cart"
+   - Frontend: `CartService.addToCart(productId, quantity)`
+   - Backend: Crea/Aggiorna CartItem associato a Cart utente
+   - Validazione: stock disponibile
+
+2. **Visualizzazione Carrello:**
+   - Frontend carica carrello da `GET /api/cart`
+   - Calcolo totale server-side
+   - Modifica quantità: `PATCH /api/cart/items/:id`
+
+3. **Checkout:**
+   - Protezione: richiede login (guard)
+   - Form validato: customer info, address, privacy
+   - Submit: `POST /api/orders` con dati form
+
+4. **Creazione Ordine:**
+   - Backend:
+     - Validazione: carrello non vuoto, stock disponibile
+     - Transaction: crea Order, copia CartItems → OrderItems
+     - Decrementa quantità prodotti
+     - Svuota carrello
+   - Frontend: redirect a conferma, ricarica carrello
+
+## Funzionalità Avanzate Implementate
+
+### 1. Area Amministratore ✅
+
+Dashboard completa con:
+- **Statistiche Real-time:**
+  - Totale ordini e revenue
+  - Conteggio utenti e prodotti
+  - Alert prodotti con stock < 10
+  - Ultimi 10 ordini recenti
+
+- **Gestione Prodotti CRUD:**
+  - Creazione nuovi prodotti
+  - Modifica prodotti esistenti
+  - Eliminazione prodotti
+  - Aggiustamento inventario (+10/-10)
+
+- **Gestione Ordini:**
+  - Visualizzazione tutti gli ordini (anche guest)
+  - Dettagli completi (customer, indirizzo, prodotti)
+  - Cancellazione ordini
+
+- **Protezione:**
+  - Backend: `before_action :require_admin!`
+  - Frontend: `adminGuard` su route `/admin`
+
+### 2. [WISHLIST / INTERNAZIONALIZZAZIONE] ✅
+
+[Inserire qui descrizione dettagliata della funzionalità scelta]
+
+#### Wishlist (se scelta)
+- Possibilità per utenti registrati di salvare prodotti preferiti
+- Persistenza backend (modelli Wishlist, WishlistItem)
+- UI: icona cuore su product card, pagina dedicata `/wishlist`
+- Funzioni: aggiungi, rimuovi, visualizza, svuota wishlist
+- Badge counter su header
+
+#### Internazionalizzazione (se scelta)
+- Supporto 2 lingue: Italiano (default) + Inglese
+- Backend: Rails i18n con locale files (it.yml, en.yml)
+- Frontend: Angular i18n con build separati
+- Language switcher in header
+- Messaggi errore, label form, UI tradotti
+- Header `Accept-Language` inviato automaticamente
+
+## Testing
+
+### Backend Tests (RSpec)
+
+```bash
+cd Backend
+bundle exec rspec
+```
+
+**Test implementati:**
+- `spec/models/product_spec.rb` - Validazioni Product
+- `spec/models/order_spec.rb` - Validazioni Order
+- `spec/requests/orders_spec.rb` - Endpoint POST /api/orders
+- `spec/requests/cart_items_spec.rb` - Endpoint POST /api/cart/items
+- [Altri test implementati...]
+
+**Coverage:** [X test, Y assertions]
+
+### Frontend Tests (Jasmine/Karma)
+
+```bash
+cd Frontend
+ng test
+```
+
+**Test implementati:**
+- `cart.service.spec.ts` - Unit test CartService
+- `auth.service.spec.ts` - Unit test AuthService
+- `product-page.spec.ts` - Component ProductPage
+- `checkout-page.spec.ts` - Component CheckoutPage
+- [Altri test implementati...]
+
+### E2E Tests (opzionale)
+
+```bash
+ng e2e
+```
+
+Scenari testati:
+- Login → Add to Cart → Checkout → Order
+
+## Deployment Production (Note)
+
+**Database:**
+- Per produzione si consiglia PostgreSQL invece di SQLite
+- Configurazione in `config/database.yml` (production)
+- Variabili ambiente: `DATABASE_URL`, `DB_USERNAME`, `DB_PASSWORD`
+
+**Secrets:**
+- Rails: impostare `RAILS_MASTER_KEY` o `config/master.key`
+- JWT: cambiare `Rails.application.secret_key_base`
+
+**CORS:**
+- Aggiornare `config/initializers/cors.rb` con dominio produzione
+
+**Frontend Build:**
+```bash
+ng build --configuration production
+# Output in dist/frontend
+```
+
+## Docker (Opzionale)
+
+```bash
+# Avvia tutto con Docker Compose
+docker-compose up
+
+# Backend: http://localhost:3000
+# Frontend: http://localhost:4200
+```
