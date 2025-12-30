@@ -1,0 +1,24 @@
+.availability {
+    margin-top: 16px;
+    font-weight: 500;
+
+    .available {
+        color: #2e7d32;
+    }
+
+    .limited {
+        color: #d32f2f;
+        font-weight: 600;
+    }
+}
+
+.price-original {
+    text-decoration: line-through;
+    color: #666;
+    margin-right: 12px;
+}
+
+.price-sale {
+    color: #d32f2f;
+    font-weight: bold;
+}

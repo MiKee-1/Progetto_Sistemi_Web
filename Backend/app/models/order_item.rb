@@ -11,7 +11,10 @@ class OrderItem < ApplicationRecord
       orderId: order_id,
       productId: product_id,
       quantity: quantity,
-      unitPrice: unit_price.to_f
+      unitPrice: unit_price.to_f,
+      createdAt: created_at.iso8601,
+      updatedAt: updated_at.iso8601,
+      product: product&.as_json
     }
   end
 end

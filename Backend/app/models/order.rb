@@ -36,7 +36,7 @@ class Order < ApplicationRecord
       address: address,
       total: total.to_f,
       createdAt: created_at.iso8601,
-      order_items: order_items.map(&:as_json)
+      orderItems: order_items.map(&:as_json)
     }
 
     # Aggiungi info utente se presente

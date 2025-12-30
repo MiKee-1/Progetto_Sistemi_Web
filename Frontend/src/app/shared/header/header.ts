@@ -50,6 +50,10 @@ export class Header {
     this.router.navigate(['/admin']);
   }
 
+  goToOrders(): void {
+    this.router.navigate(['/orders']);
+  }
+
   logout(): void {
     this.authService.logout();
     this.cartService.resetCart();

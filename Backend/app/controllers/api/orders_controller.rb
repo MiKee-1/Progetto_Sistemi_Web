@@ -7,16 +7,22 @@ module Api
     # Se l'utente è admin, mostra tutti gli ordini
     # Altrimenti mostra solo gli ordini dell'utente loggato
     if current_user&.admin?
-      @orders = Order.all.order(created_at: :desc)
+      @orders = Order.all
     elsif current_user
-      @orders = Order.where(user_id: current_user.id).order(created_at: :desc)
+      @orders = Order.where(user_id: current_user.id)
     else
       # Utenti non autenticati non possono vedere ordini
       render json: { error: 'Not authenticated' }, status: :unauthorized
       return
     end
 
-    render json: @orders, include: :order_items
+    # Applica filtri opzionali
+    @orders = apply_filters(@orders)
+
+    # Ordina per data di creazione (più recenti prima) e include order_items con prodotti
+    @orders = @orders.includes(order_items: :product).order(created_at: :desc)
+
+    render json: @orders
   end
 
   # POST /api/orders
@@ -91,6 +97,42 @@ module Api
   end
 
   private
+
+  def apply_filters(orders)
+    # Filtro per data di inizio
+    if params[:start_date].present?
+      begin
+        start_date = Date.parse(params[:start_date])
+        orders = orders.where('created_at >= ?', start_date.beginning_of_day)
+      rescue ArgumentError
+        # Ignora se la data non è valida
+      end
+    end
+
+    # Filtro per data di fine
+    if params[:end_date].present?
+      begin
+        end_date = Date.parse(params[:end_date])
+        orders = orders.where('created_at <= ?', end_date.end_of_day)
+      rescue ArgumentError
+        # Ignora se la data non è valida
+      end
+    end
+
+    # Filtro per totale minimo
+    if params[:min_total].present?
+      min_total = params[:min_total].to_f
+      orders = orders.where('total >= ?', min_total)
+    end
+
+    # Filtro per totale massimo
+    if params[:max_total].present?
+      max_total = params[:max_total].to_f
+      orders = orders.where('total <= ?', max_total)
+    end
+
+    orders
+  end
 
   def order_params
     params.require(:order).permit(

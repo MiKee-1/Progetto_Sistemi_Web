@@ -35,6 +35,10 @@
         <mat-icon>email</mat-icon>
         {{ currentUser()?.email }}
       </button>
+      <button mat-menu-item (click)="goToOrders()">
+        <mat-icon>receipt_long</mat-icon>
+        My Orders
+      </button>
       <button mat-menu-item (click)="logout()">
         <mat-icon>logout</mat-icon>
         Logout

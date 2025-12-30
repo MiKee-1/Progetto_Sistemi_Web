@@ -20,6 +20,11 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     { path: 'checkout', component: CheckoutPage, canActivate: [checkoutGuardGuard] },
+    {
+        path: 'orders',
+        loadComponent: () => import('./features/orders/order-history/order-history').then(m => m.OrderHistoryPage),
+        canActivate: [authGuard]
+    },
     { path: 'product/:id', component: ProductDetailPage },
     { path: 'login', component: LoginPage },
     { path: 'register', component: RegisterPage },
