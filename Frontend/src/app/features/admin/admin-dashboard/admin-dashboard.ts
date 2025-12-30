@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
@@ -13,6 +13,9 @@ import { AdminService, AdminStats, OrdersResponse } from '../../../core/services
 import { ProductApi } from '../../../core/services/product-api';
 import { Product } from '../../../core/models/product';
 import { MatDialog } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
+import { Order } from '../../../core/models/order';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -26,6 +29,7 @@ import { MatDialog } from '@angular/material/dialog';
     MatCardTitle,
     MatCardContent,
     MatButton,
+    MatIconButton,
     MatIcon,
     MatProgressSpinner,
     MatTable,
@@ -41,6 +45,8 @@ import { MatDialog } from '@angular/material/dialog';
     MatFormField,
     MatLabel,
     MatInput,
+    MatExpansionModule,
+    MatDividerModule,
   ],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.scss',
@@ -210,5 +216,20 @@ export class AdminDashboard implements OnInit {
         error: (err) => console.error('Error deleting order:', err),
       });
     }
+  }
+
+  getOrderItemsCount(order: Order): number {
+    return order.orderItems?.reduce((total, item) => total + item.quantity, 0) || 0;
+  }
+
+  formatOrderDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('it-IT', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 }
