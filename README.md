@@ -62,8 +62,7 @@ cd Progetto_Sistemi_Web
 
 #### Step 1: Build up
 
-In un **nuovo terminale**, esegui:
-
+In un **nuovo terminale**, esegui (solo la prima volta):
 ```bash
 # Avvio del container Backend
 docker compose up -d backend
@@ -87,14 +86,7 @@ Il seed crea:
 - **2 Utenti:** `user@example.com` / `password123`, `user2@example.com` / `password123`
 - **~50 Prodotti** importati da `Frontend/shop-mock-api/db.json`
 
-
-Questo comando:
-- Compila le immagini Docker per backend e frontend
-- Avvia i container in modalità attached (vedrai i log)
-- Il backend sarà disponibile su: http://localhost:3000
-- Il frontend sarà disponibile su: http://localhost:4200
-
-#### Step 2: Setup del database e del frontend (solo al primo avvio)
+#### Step 2: compila immagini backend e frontend (solo la prima volta)
 
 ```bash
 # Build delle immagini e avvio dei container
@@ -102,6 +94,13 @@ docker compose up --build
 ```
 
 **Nota:** Al primo avvio, attendi che Angular compili completamente (vedrai "Compiled successfully" nei log).
+
+Questo comando:
+- Compila le immagini Docker per backend e frontend
+- Avvia i container in modalità attached (vedrai i log)
+- Il backend sarà disponibile su: http://localhost:3000
+- Il frontend sarà disponibile su: http://localhost:4200
+
 
 
 #### Step 3: Verifica installazione
@@ -329,55 +328,10 @@ Dashboard completa con:
   - Backend: `before_action :require_admin!`
   - Frontend: `adminGuard` su route `/admin`
 
-### 2. [WISHLIST]
 
-#### Wishlist (se scelta)
-- Possibilità per utenti registrati di salvare prodotti preferiti
-- Persistenza backend (modelli Wishlist, WishlistItem)
-- UI: icona cuore su product card, pagina dedicata `/wishlist`
-- Funzioni: aggiungi, rimuovi, visualizza, svuota wishlist
-- Badge counter su header
 
 ## Testing (da implementare)
 
-### Backend Tests (RSpec)
-
-```bash
-cd Backend
-bundle exec rspec
-```
-
-**Test implementati:**
-- `spec/models/product_spec.rb` - Validazioni Product
-- `spec/models/order_spec.rb` - Validazioni Order
-- `spec/requests/orders_spec.rb` - Endpoint POST /api/orders
-- `spec/requests/cart_items_spec.rb` - Endpoint POST /api/cart/items
-- [Altri test implementati...]
-
-**Coverage:** [X test, Y assertions]
-
-### Frontend Tests (Jasmine/Karma)
-
-```bash
-cd Frontend
-ng test
-```
-
-**Test implementati:**
-- `cart.service.spec.ts` - Unit test CartService
-- `auth.service.spec.ts` - Unit test AuthService
-- `product-page.spec.ts` - Component ProductPage
-- `checkout-page.spec.ts` - Component CheckoutPage
-- [Altri test implementati...]
-
-### E2E Tests (opzionale)
-
-```bash
-ng e2e
-```
-
-Scenari testati:
-- Login → Add to Cart → Checkout → Order
 
 ## Deployment Production (Note)
 
