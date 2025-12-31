@@ -60,12 +60,33 @@ cd Progetto_Sistemi_Web
 
 ### 2. Avvio con Docker
 
-#### Step 1: Build e avvio dei container
+#### Step 1: Build up
+
+In un **nuovo terminale**, esegui:
 
 ```bash
-# Build delle immagini e avvio dei container
-docker compose up --build
+# Avvio del container Backend
+docker compose up -d backend
+docker compose up -d frontend
+
+# Crea il database e le tabelle per il backend
+./bin/docker-rails db:create
+./bin/docker-rails db:migrate
+./bin/docker-rails db:seed
+
+# npm install
+./bin/docker-frontend npm install
+
+# Kill containers
+docker compose down
+
 ```
+
+Il seed crea:
+- **1 Admin:** `admin@example.com` / `password123`
+- **2 Utenti:** `user@example.com` / `password123`, `user2@example.com` / `password123`
+- **~50 Prodotti** importati da `Frontend/shop-mock-api/db.json`
+
 
 Questo comando:
 - Compila le immagini Docker per backend e frontend
@@ -73,27 +94,15 @@ Questo comando:
 - Il backend sarà disponibile su: http://localhost:3000
 - Il frontend sarà disponibile su: http://localhost:4200
 
-**Nota:** Al primo avvio, attendi che Angular compili completamente (vedrai "Compiled successfully" nei log).
-
-#### Step 2: Setup del database (solo al primo avvio)
-
-In un **nuovo terminale**, esegui:
+#### Step 2: Setup del database e del frontend (solo al primo avvio)
 
 ```bash
-# Avvio del container Backend
-docker compose up -d backend
-# Crea il database e le tabelle
-./bin/docker-rails db:create
-./bin/docker-rails db:migrate
-./bin/docker-rails db:seed
-# Kill container Backend
-docker compose down
+# Build delle immagini e avvio dei container
+docker compose up --build
 ```
 
-Il seed crea:
-- **1 Admin:** `admin@example.com` / `password123`
-- **2 Utenti:** `user@example.com` / `password123`, `user2@example.com` / `password123`
-- **~50 Prodotti** importati da `Frontend/shop-mock-api/db.json`
+**Nota:** Al primo avvio, attendi che Angular compili completamente (vedrai "Compiled successfully" nei log).
+
 
 #### Step 3: Verifica installazione
 
