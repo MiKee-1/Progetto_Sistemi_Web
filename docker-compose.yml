@@ -5,10 +5,6 @@ services:
     build:
       context: ./Backend
       dockerfile: Dockerfile.dev
-      args:
-        USER_ID: ${UID:-1000}
-        GROUP_ID: ${GID:-1000}
-    user: "${UID:-1000}:${GID:-1000}"
     ports:
       - "3000:3000"
     environment:

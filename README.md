@@ -60,27 +60,22 @@ cd Progetto_Sistemi_Web
 
 ### 2. Avvio con Docker
 
-**IMPORTANTE - Gestione Permessi:**
-Per evitare problemi di permessi quando cloni la repository su PC diversi, usa sempre lo script helper `bin/docker-up` invece di `docker compose up` direttamente. Lo script configura automaticamente i permessi corretti.
+#### Step 1: Setup iniziale (solo la prima volta)
 
-#### Step 1: Build up
-
-In un **nuovo terminale**, esegui (solo la prima volta):
 ```bash
-# Avvio del container Backend e Frontend
-./bin/docker-up -d
+# Build e avvio dei container in background
+docker compose up -d --build
 
 # Crea il database e le tabelle per il backend
-./bin/docker-rails db:create
-./bin/docker-rails db:migrate
-./bin/docker-rails db:seed
+docker exec progetto_sistemi_web-backend-1 bin/rails db:create
+docker exec progetto_sistemi_web-backend-1 bin/rails db:migrate
+docker exec progetto_sistemi_web-backend-1 bin/rails db:seed
 
-# npm install
-./bin/docker-frontend npm install
+# Installa le dipendenze del frontend
+docker exec progetto_sistemi_web-frontend-1 npm install
 
-# Kill containers
-./bin/docker-down
-
+# Ferma i container
+docker compose down
 ```
 
 Il seed crea:
@@ -88,11 +83,11 @@ Il seed crea:
 - **2 Utenti:** `user@example.com` / `password123`, `user2@example.com` / `password123`
 - **~50 Prodotti** importati da `Frontend/shop-mock-api/db.json`
 
-#### Step 2: compila immagini backend e frontend (solo la prima volta)
+#### Step 2: Avvio applicazione
 
 ```bash
-# Build delle immagini e avvio dei container
-./bin/docker-up --build
+# Build delle immagini e avvio dei container (in modalità attached per vedere i log)
+docker compose up --build
 ```
 
 **Nota:** Al primo avvio, attendi che Angular compili completamente (vedrai "Compiled successfully" nei log).
@@ -103,8 +98,6 @@ Questo comando:
 - Il backend sarà disponibile su: http://localhost:3000
 - Il frontend sarà disponibile su: http://localhost:4200
 
-
-
 #### Step 3: Verifica installazione
 
 Apri il browser su http://localhost:4200 - dovresti vedere la homepage con i prodotti caricati.
@@ -112,17 +105,17 @@ Apri il browser su http://localhost:4200 - dovresti vedere la homepage con i pro
 #### Comandi Docker Utili
 
 ```bash
-# Avvio container (dopo il primo build) - USA SEMPRE bin/docker-up
-./bin/docker-up
+# Avvio container in background (dopo il primo build)
+docker compose up -d
 
-# Avvio in background (detached mode)
-./bin/docker-up -d
+# Avvio con rebuild delle immagini
+docker compose up --build
 
 # Stop dei container
-./bin/docker-down
+docker compose down
 
 # Stop e rimuovi volumi
-./bin/docker-down -v
+docker compose down -v
 
 # Visualizza log
 docker compose logs -f
@@ -134,14 +127,23 @@ docker compose restart frontend
 # Accedi alla shell del container backend
 docker exec -it progetto_sistemi_web-backend-1 bash
 
-# Esegui comandi Rails tramite helper script
-./bin/docker-rails console
-./bin/docker-rails routes
-./bin/docker-rails db:reset
+# Esegui comandi Rails
+docker exec progetto_sistemi_web-backend-1 bin/rails console
+docker exec progetto_sistemi_web-backend-1 bin/rails routes
+docker exec progetto_sistemi_web-backend-1 bin/rails db:reset
 
-# Esegui comandi generici nel backend
-./bin/docker-exec bash
-./bin/docker-exec bundle install
+# Esegui comandi npm nel frontend
+docker exec progetto_sistemi_web-frontend-1 npm install
+docker exec progetto_sistemi_web-frontend-1 npm run build
+```
+
+**Script Helper (opzionali):**
+Per comodità, puoi usare gli script nella cartella `bin/` che semplificano i comandi:
+```bash
+./bin/docker-up        # Equivalente a: docker compose up
+./bin/docker-down      # Equivalente a: docker compose down
+./bin/docker-rails     # Esegue comandi Rails nel backend
+./bin/docker-frontend  # Esegue comandi npm nel frontend
 ```
 
 ---
@@ -407,46 +409,24 @@ docker compose up --build
 
 ### Permessi negati su Docker
 
-**Causa:** Disallineamento tra l'UID/GID dell'utente host e quello configurato nel container Docker. Questo problema si verifica tipicamente quando:
-- Cloni la repository su un PC diverso
-- L'utente ha un UID diverso da 1000 (es. macOS usa 501, alcuni sistemi Linux usano 1001+)
-- File creati dal container risultano di proprietà di un altro utente sull'host
+**Causa:** File creati dal container Docker potrebbero avere permessi diversi dall'utente host.
 
-**Soluzione Automatica (Consigliata):**
-Usa sempre lo script helper `bin/docker-up` che configura automaticamente i permessi corretti:
+**Soluzione:**
+La configurazione Docker è stata ottimizzata per gestire automaticamente i permessi. Se riscontri ancora problemi:
+
 ```bash
-# Ferma i container esistenti
-./bin/docker-down
+# Ferma i container
+docker compose down
 
-# Riavvia con permessi corretti
-./bin/docker-up --build
-```
-
-Lo script `bin/docker-up` esporta automaticamente `UID=$(id -u)` e `GID=$(id -g)` prima di avviare docker compose, garantendo che i file creati dal container abbiano lo stesso proprietario dell'utente host.
-
-**Soluzione Manuale (se necessario):**
-Se non puoi usare lo script helper:
-```bash
-# Esporta UID e GID prima di ogni comando docker compose
-export UID=$(id -u)
-export GID=$(id -g)
-
-# Poi avvia docker compose
-docker compose up --build
-
-# Oppure crea un file .env nella root del progetto
-echo "UID=$(id -u)" > .env
-echo "GID=$(id -g)" >> .env
-docker compose up
-```
-
-**Fix permessi file esistenti:**
-Se hai già file con permessi sbagliati:
-```bash
 # Ripristina proprietà corretta sui file host
 sudo chown -R $USER:$USER Backend Frontend
 
-# Rimuovi i volumi Docker e ricrea
-./bin/docker-down -v
-./bin/docker-up --build
+# Rimuovi i volumi e ricrea
+docker compose down -v
+docker compose up --build
+```
+
+Se i problemi persistono, puoi modificare i permessi dei file locali:
+```bash
+chmod -R 755 Backend Frontend
 ```
