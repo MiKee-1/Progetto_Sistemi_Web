@@ -240,24 +240,6 @@
                 <div class="stat-value">${{ orders()!.stats.total_revenue.toFixed(2) }}</div>
               </mat-card-content>
             </mat-card>
-
-            <mat-card>
-              <mat-card-header>
-                <mat-card-title>User Orders</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                <div class="stat-value">{{ orders()!.stats.orders_by_status.with_user }}</div>
-              </mat-card-content>
-            </mat-card>
-
-            <mat-card>
-              <mat-card-header>
-                <mat-card-title>Guest Orders</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                <div class="stat-value">{{ orders()!.stats.orders_by_status.guest }}</div>
-              </mat-card-content>
-            </mat-card>
           </div>
 
           <div class="orders-list">
