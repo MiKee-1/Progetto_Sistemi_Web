@@ -102,8 +102,8 @@
           <!-- Informazioni cliente -->
           <div class="section">
             <h3>Customer Information</h3>
-            <p><strong>Name:</strong> {{ order.customer?.firstName || 'N/A' }} {{ order.customer?.lastName || '' }}</p>
-            <p><strong>Email:</strong> {{ order.customer?.email || 'N/A' }}</p>
+            <p><strong>Name:</strong> {{ order.customer.firstName || 'N/A' }} {{ order.customer.lastName || '' }}</p>
+            <p><strong>Email:</strong> {{ order.customer.email || 'N/A' }}</p>
           </div>
 
           <mat-divider></mat-divider>
@@ -111,8 +111,8 @@
           <!-- Indirizzo di spedizione -->
           <div class="section">
             <h3>Shipping Address</h3>
-            <p>{{ order.address?.street || 'N/A' }}</p>
-            <p>{{ order.address?.city || 'N/A' }}, {{ order.address?.zip || 'N/A' }}</p>
+            <p>{{ order.address.street || 'N/A' }}</p>
+            <p>{{ order.address.city || 'N/A' }}, {{ order.address.zip || 'N/A' }}</p>
           </div>
 
           <mat-divider></mat-divider>

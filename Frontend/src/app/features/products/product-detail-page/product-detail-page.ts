@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { switchMap, map } from 'rxjs';
 import { ProductApi } from '../../../core/services/product-api';
 import { Product } from '../../../core/models/product';
-import { NgIf, AsyncPipe, CurrencyPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -13,7 +13,7 @@ import { CartService } from '../../../core/services/cart.service';
   selector: 'app-product-detail-page',
   standalone: true,
   templateUrl: './product-detail-page.html',
-  imports: [RouterModule, NgIf, AsyncPipe, CurrencyPipe, MatCardModule, MatButtonModule, MatSnackBarModule],
+  imports: [RouterModule, AsyncPipe, CurrencyPipe, MatCardModule, MatButtonModule, MatSnackBarModule],
 })
 
 export class ProductDetailPage {

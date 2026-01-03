@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { MatToolbar } from '@angular/material/toolbar';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-header',
-  imports: [MatIcon, MatToolbar, MatButton, MatIconButton, MatToolbarRow, MatMenu, MatMenuItem, MatMenuTrigger, MatBadgeModule],
+  imports: [MatIcon, MatToolbar, MatButton, MatIconButton, MatMenu, MatMenuItem, MatMenuTrigger, MatBadgeModule],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
