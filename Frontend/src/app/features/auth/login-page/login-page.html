@@ -8,12 +8,15 @@
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" placeholder="your@email.com" />
+          <input matInput type="email" formControlName="email" placeholder="your@email.com" maxlength="255" />
           @if (loginForm.get('email')?.hasError('required')) {
             <mat-error>Email is required</mat-error>
           }
           @if (loginForm.get('email')?.hasError('email')) {
             <mat-error>Please enter a valid email</mat-error>
+          }
+          @if (loginForm.get('email')?.hasError('maxlength')) {
+            <mat-error>Email is too long (maximum is 255 characters)</mat-error>
           }
         </mat-form-field>
 

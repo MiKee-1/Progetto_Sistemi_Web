@@ -21,14 +21,14 @@ export class CheckoutPage {
 
   readonly form = this.fb.group({
     customer: this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]],
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
     }),
     address: this.fb.group({
-      street: ['', [Validators.required]],
-      city: ['', [Validators.required]],
-      zip: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]],
+      street: ['', [Validators.required, Validators.maxLength(255)]],
+      city: ['', [Validators.required, Validators.maxLength(100)]],
+      zip: ['', [Validators.required, Validators.pattern('^[0-9]{5}$'), Validators.maxLength(10)]],
 
     }),
     shippingMethod: ['standard', Validators.required],

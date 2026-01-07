@@ -40,10 +40,10 @@ export class RegisterPage {
 
   constructor() {
     this.registerForm = this.fb.group({
-      first_name: ['', [Validators.required]],
-      last_name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      address: [''],
+      first_name: ['', [Validators.required, Validators.maxLength(50)]],
+      last_name: ['', [Validators.required, Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
+      address: ['', [Validators.maxLength(255)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       password_confirmation: ['', [Validators.required]],
     }, { validators: this.passwordMatchValidator });

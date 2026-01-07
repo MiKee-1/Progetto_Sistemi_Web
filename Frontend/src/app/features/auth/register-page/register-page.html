@@ -9,35 +9,47 @@
         <div class="form-row">
           <mat-form-field appearance="outline" class="half-width">
             <mat-label>First Name</mat-label>
-            <input matInput formControlName="first_name" placeholder="John" />
+            <input matInput formControlName="first_name" placeholder="John" maxlength="50" />
             @if (registerForm.get('first_name')?.hasError('required')) {
               <mat-error>First name is required</mat-error>
+            }
+            @if (registerForm.get('first_name')?.hasError('maxlength')) {
+              <mat-error>First name is too long (maximum is 50 characters)</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="half-width">
             <mat-label>Last Name</mat-label>
-            <input matInput formControlName="last_name" placeholder="Doe" />
+            <input matInput formControlName="last_name" placeholder="Doe" maxlength="50" />
             @if (registerForm.get('last_name')?.hasError('required')) {
               <mat-error>Last name is required</mat-error>
+            }
+            @if (registerForm.get('last_name')?.hasError('maxlength')) {
+              <mat-error>Last name is too long (maximum is 50 characters)</mat-error>
             }
           </mat-form-field>
         </div>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" placeholder="your@email.com" />
+          <input matInput type="email" formControlName="email" placeholder="your@email.com" maxlength="255" />
           @if (registerForm.get('email')?.hasError('required')) {
             <mat-error>Email is required</mat-error>
           }
           @if (registerForm.get('email')?.hasError('email')) {
             <mat-error>Please enter a valid email</mat-error>
           }
+          @if (registerForm.get('email')?.hasError('maxlength')) {
+            <mat-error>Email is too long (maximum is 255 characters)</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Address (Optional)</mat-label>
-          <input matInput formControlName="address" placeholder="123 Main St, City, ZIP" />
+          <input matInput formControlName="address" placeholder="123 Main St, City, ZIP" maxlength="255" />
+          @if (registerForm.get('address')?.hasError('maxlength')) {
+            <mat-error>Address is too long (maximum is 255 characters)</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">

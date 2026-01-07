@@ -1,7 +1,8 @@
 class Product < ApplicationRecord
   self.primary_key = 'id'
 
-  validates :title, presence: true
+  validates :title, presence: true, length: { maximum: 200 }
+  validates :description, length: { maximum: 2000 }, allow_blank: true
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :original_price, presence: true, numericality: { greater_than: 0 }
   validates :quantity, presence: true, numericality: { greater_than_or_equal_to: 0, only_integer: true }

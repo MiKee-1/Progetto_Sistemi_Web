@@ -5,9 +5,10 @@ class User < ApplicationRecord
   has_one :cart, dependent: :destroy
 
   # Validazioni
-  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :first_name, presence: true
-  validates :last_name, presence: true
+  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 255 }
+  validates :first_name, presence: true, length: { maximum: 50 }
+  validates :last_name, presence: true, length: { maximum: 50 }
+  validates :address, length: { maximum: 255 }, allow_blank: true
   validates :password, length: { minimum: 6 }, if: :password_digest_changed?
   validates :role, presence: true, inclusion: { in: %w[user admin] }
 
