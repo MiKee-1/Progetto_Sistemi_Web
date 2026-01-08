@@ -22,12 +22,23 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" placeholder="Password" />
+          <input 
+            matInput 
+            [type]="hidePassword() ? 'password' : 'text'" 
+            formControlName="password" 
+            placeholder="Password" 
+          />
+          <button 
+            mat-icon-button 
+            matSuffix 
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="hidePassword() ? 'Mostra password' : 'Nascondi password'"
+          >
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
           @if (loginForm.get('password')?.hasError('required')) {
             <mat-error>Password is required</mat-error>
-          }
-          @if (loginForm.get('password')?.hasError('minlength')) {
-            <mat-error>Password must be at least 6 characters</mat-error>
           }
         </mat-form-field>
 

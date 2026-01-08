@@ -6,8 +6,10 @@ import { CartService } from '../../../core/services/cart.service';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatIcon } from '@angular/material/icon';
+import { MatSuffix } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-register-page',
@@ -24,6 +26,9 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatError,
     MatButton,
     MatProgressSpinner,
+    MatIcon,
+    MatSuffix,
+    MatIconButton
   ],
   templateUrl: './register-page.html',
   styleUrl: './register-page.scss',
@@ -37,6 +42,7 @@ export class RegisterPage {
   registerForm: FormGroup;
   loading = signal(false);
   error = signal<string | null>(null);
+  hidePassword = signal(true);
 
   constructor() {
     this.registerForm = this.fb.group({
@@ -49,7 +55,11 @@ export class RegisterPage {
     }, { validators: this.passwordMatchValidator });
   }
 
-  passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
+  togglePasswordVisibility(): void {
+    this.hidePassword.update(value => !value);
+  }
+
+passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
     const password = control.get('password');
     const confirmPassword = control.get('password_confirmation');
 
@@ -80,4 +90,5 @@ export class RegisterPage {
       });
     }
   }
+  
 }

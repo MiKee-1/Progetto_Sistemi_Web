@@ -4,10 +4,11 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
 import { CartService } from '../../../core/services/cart.service';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
-import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatError, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login-page',
@@ -23,7 +24,10 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatInput,
     MatError,
     MatButton,
+    MatIconButton,
     MatProgressSpinner,
+    MatIcon,
+    MatSuffix,
   ],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
@@ -37,12 +41,17 @@ export class LoginPage {
   loginForm: FormGroup;
   loading = signal(false);
   error = signal<string | null>(null);
+  hidePassword = signal(true);
 
   constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.hidePassword.update(value => !value);
   }
 
   onSubmit(): void {
