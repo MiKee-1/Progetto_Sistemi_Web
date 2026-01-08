@@ -33,7 +33,7 @@ docker compose version    # Docker Compose version 2.x.x o superiore
 
 ### Opzione 2: Installazione Manuale
 
-- **Ruby:** versione 3.4.7 (consigliato gestione con rbenv/rvm)
+- **Ruby:** versione 3.4.7 
 - **Rails:** versione 8.1.1 (`gem install rails -v 8.1.1`)
 - **Node.js:** versione 20.x o superiore
 - **npm:** versione 10.x o superiore
@@ -137,17 +137,7 @@ docker exec progetto_sistemi_web-frontend-1 npm install
 docker exec progetto_sistemi_web-frontend-1 npm run build
 ```
 
-**Script Helper (opzionali):**
-Per comodità, puoi usare gli script nella cartella `bin/` che semplificano i comandi:
-```bash
-./bin/docker-up        # Equivalente a: docker compose up
-./bin/docker-down      # Equivalente a: docker compose down
-./bin/docker-rails     # Esegue comandi Rails nel backend
-./bin/docker-frontend  # Esegue comandi npm nel frontend
-```
-
 ---
-
 
 ## Utilizzo Applicazione
 
@@ -313,7 +303,7 @@ order_items
 
 ## Funzionalità Avanzate Implementate
 
-### 1. Area Amministratore ✅
+### 1. Area Amministratore 
 
 Dashboard completa con:
 - **Statistiche Real-time:**
@@ -339,28 +329,9 @@ Dashboard completa con:
 
 
 
-## Testing (da implementare)
+## Testing
+ - **Un test su controller e un test su model**
 
-
-## Deployment Production (Note)
-
-**Database:**
-- Per produzione si consiglia PostgreSQL invece di SQLite
-- Configurazione in `config/database.yml` (production)
-- Variabili ambiente: `DATABASE_URL`, `DB_USERNAME`, `DB_PASSWORD`
-
-**Secrets:**
-- Rails: impostare `RAILS_MASTER_KEY` o `config/master.key`
-- JWT: cambiare `Rails.application.secret_key_base`
-
-**CORS:**
-- Aggiornare `config/initializers/cors.rb` con dominio produzione
-
-**Frontend Build:**
-```bash
-ng build --configuration production
-# Output in dist/frontend
-```
 
 ## Troubleshooting
 
@@ -430,3 +401,5 @@ Se i problemi persistono, puoi modificare i permessi dei file locali:
 ```bash
 chmod -R 755 Backend Frontend
 ```
+
+### PID 1 Backend non funzionante
