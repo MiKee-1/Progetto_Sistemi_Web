@@ -129,8 +129,11 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         error: error.error
       });
 
-      // Mostra notifica visiva all'utente (tranne per 401 che gestisce il redirect)
-      if (error.status !== 401) {
+      // Mostra notifica visiva all'utente solo per errori critici
+      // Escludiamo: 401 (gestito con redirect), 404 (gestito dai componenti)
+      const shouldShowNotification = error.status !== 401 && error.status !== 404;
+
+      if (shouldShowNotification) {
         notificationService.showError(errorMessage);
       }
 
