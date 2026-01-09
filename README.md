@@ -402,4 +402,30 @@ Se i problemi persistono, puoi modificare i permessi dei file locali:
 chmod -R 755 Backend Frontend
 ```
 
-### PID 1 Backend non funzionante
+### Backend "già in esecuzione"
+Può capitare di chiudere docker forzatamente premendo "ctrl+c" due volte di fila.
+Consiglio di terminare i container **premendo UNA volta ctrl+c**, oppure con:
+```bash
+docker compose down
+```
+
+Se dovesse accadere un errore simile:
+```bash
+backend-1   | => Booting Puma
+backend-1   | => Rails 8.1.1 application starting in development 
+backend-1   | => Run `bin/rails server --help` for more startup options
+backend-1   | A server is already running (pid: 1, file: /rails/tmp/pids/server.pid).
+backend-1   | Exiting
+backend-1 exited with code 1
+```
+Bisognerà eliminare il file server.pid
+```bash
+#terminiamo i container
+docker compose down
+
+#eliminiamo il file pid contenente il backend "fantasma"
+sudo rm Backend/tmp/pids/server.pid
+
+#riavviamo docker
+docker compose up --build
+````
