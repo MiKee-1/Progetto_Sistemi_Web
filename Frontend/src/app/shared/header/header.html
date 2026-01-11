@@ -16,6 +16,7 @@
       </button>
     }
 
+  @if (!isAdmin()) {
     <button matIconButton
             aria-label="Shopping cart"
             (click)="goToCart()"
@@ -24,6 +25,7 @@
             matBadgeColor="warn">
       <mat-icon>shopping_cart</mat-icon>
     </button>
+  }
 
     <button mat-button [matMenuTriggerFor]="userMenu" aria-label="User menu">
       <mat-icon>person</mat-icon>
@@ -31,18 +33,24 @@
     </button>
 
     <mat-menu #userMenu="matMenu">
+
       <button mat-menu-item disabled>
         <mat-icon>email</mat-icon>
         {{ currentUser()?.email }}
       </button>
+
+      @if (!isAdmin()) {
       <button mat-menu-item (click)="goToOrders()">
         <mat-icon>receipt_long</mat-icon>
         My Orders
       </button>
+      }
+
       <button mat-menu-item (click)="logout()">
         <mat-icon>logout</mat-icon>
         Logout
       </button>
+
     </mat-menu>
   } @else {
     <!-- User is not logged in -->

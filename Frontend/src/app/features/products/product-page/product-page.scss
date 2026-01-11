@@ -19,21 +19,22 @@
         margin-bottom: 1.5rem;
     }
 
-    // .grid {
-    //     display: flex;
-    //     gap: 1rem;
-    //     flex-flow: row wrap;
-    //     justify-content: center;
-    //     flex-grow: 1;
-    // }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(26%, 1fr));
+        gap: 1.5rem 2rem; /* row-gap: 1.5rem, column-gap: 2rem */
+        margin-top: 20px;
+        padding: 0 1rem;
+        
+    }
 
-    // .empty {
-    //     margin-top: 1rem;
-    //     color: #6b7280;
-    //     text-align: center;
-    // }
+    .empty {
+        grid-column: 1 / -1;
+        margin-top: 1rem;
+        color: #6b7280;
+        text-align: center;
+    }
 
     app-product-card {
         width: 100%;
-        margin-top: 2em;
     }

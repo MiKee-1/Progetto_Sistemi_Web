@@ -63,7 +63,7 @@ export class ProductPage {
   );
 
   page$ = new BehaviorSubject(1);
-  pageSize = 10;
+  pageSize = 9;
   paged$ = combineLatest([this.filteredProducts$, this.page$]).pipe(
     map(([items, page]) => {
       const start = (page - 1) * this.pageSize;

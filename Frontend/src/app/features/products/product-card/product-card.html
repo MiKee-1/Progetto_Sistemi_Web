@@ -17,11 +17,12 @@
             }
         </div>
     </mat-card-content>
-    <mat-card-actions align="end">
-        <button mat-flat-button color="primary" aria-label="Aggiungi al carrello" (click)="addToCart(product)">Aggiungi
-            al carrello</button>
+    <mat-card-actions>
+        <button mat-flat-button color="accent" aria-label="Vai ai dettagli" [routerLink]="['/product', product.id]">
+            Dettagli
+        </button>
+        <button mat-flat-button color="primary" aria-label="Aggiungi al carrello" (click)="addToCart(product)">
+            Carrello
+        </button>
     </mat-card-actions>
-    <button mat-flat-button color="primary" aria-label="Vai ai dettagli" [routerLink]="['/product', product.id]">
-        Dettagli
-    </button>
 </mat-card>
