@@ -13,6 +13,7 @@ import { CartService } from '../../../core/services/cart.service';
   selector: 'app-product-detail-page',
   standalone: true,
   templateUrl: './product-detail-page.html',
+  styleUrls: ['./product-detail-page.scss'],
   imports: [RouterModule, AsyncPipe, CurrencyPipe, MatCardModule, MatButtonModule, MatSnackBarModule],
 })
 
