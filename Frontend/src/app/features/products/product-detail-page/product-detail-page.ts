@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { switchMap, map, combineLatest } from 'rxjs';
+import { switchMap, map, combineLatest, tap } from 'rxjs';
 import { ProductApi } from '../../../core/services/product-api';
 import { Product } from '../../../core/models/product';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
@@ -17,7 +17,7 @@ import { CartService } from '../../../core/services/cart.service';
   imports: [RouterModule, AsyncPipe, CurrencyPipe, MatCardModule, MatButtonModule, MatSnackBarModule],
 })
 
-export class ProductDetailPage {
+export class ProductDetailPage implements OnInit {
   private route = inject(ActivatedRoute);
   private svc = inject(ProductApi);
   private cartService = inject(CartService);
@@ -27,7 +27,21 @@ export class ProductDetailPage {
   readonly product$ = this.route.paramMap.pipe(
     map(params => params.get('id') as string),
     switchMap(id => this.svc.getById(id)),
+    tap(() => {
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+    }),
   );
+
+  ngOnInit() {
+    // No additional subscription needed
+  }
+
+  navigateToProduct(productId: string) {
+    console.log('Navigating to product:', productId);
+    this.router.navigate(['/product', productId]).then(() => {
+      console.log('Navigation completed');
+    });
+  }
 
   readonly similarProducts$ = combineLatest([this.product$, this.svc.list()]).pipe(
     map(([currentProduct, allProducts]) => {
