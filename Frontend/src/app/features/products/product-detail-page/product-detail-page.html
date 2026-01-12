@@ -48,4 +48,30 @@
         </div>
     </mat-card-content>
 </mat-card>
+
+@if (similarProducts$ | async; as similarProducts) {
+    @if (similarProducts.length > 0) {
+        <div class="similar-products">
+            <h2>Prodotti Simili</h2>
+            <div class="similar-products-grid">
+                @for (similar of similarProducts; track similar.id) {
+                    <mat-card class="similar-product-card" [routerLink]="['/products', similar.id]">
+                        <img mat-card-image [src]="similar.thumbnail" [alt]="similar.title" />
+                        <mat-card-content>
+                            <mat-card-title>{{ similar.title }}</mat-card-title>
+                            <mat-card-subtitle>
+                                @if (similar.sale) {
+                                    <span class="price-sale">{{ similar.price | currency:'EUR' }}</span>
+                                    <span class="price-original">{{ similar.originalPrice | currency:'EUR' }}</span>
+                                } @else {
+                                    {{ similar.price | currency:'EUR' }}
+                                }
+                            </mat-card-subtitle>
+                        </mat-card-content>
+                    </mat-card>
+                }
+            </div>
+        </div>
+    }
+}
 }

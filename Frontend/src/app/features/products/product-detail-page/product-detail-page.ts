@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { switchMap, map } from 'rxjs';
+import { switchMap, map, combineLatest } from 'rxjs';
 import { ProductApi } from '../../../core/services/product-api';
 import { Product } from '../../../core/models/product';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
@@ -27,6 +27,24 @@ export class ProductDetailPage {
   readonly product$ = this.route.paramMap.pipe(
     map(params => params.get('id') as string),
     switchMap(id => this.svc.getById(id)),
+  );
+
+  readonly similarProducts$ = combineLatest([this.product$, this.svc.list()]).pipe(
+    map(([currentProduct, allProducts]) => {
+      if (!currentProduct.tags || currentProduct.tags.length === 0) {
+        return [];
+      }
+
+      // Filter products that share at least one tag with the current product
+      const similar = allProducts.filter(p =>
+        p.id !== currentProduct.id &&
+        p.tags &&
+        p.tags.some(tag => currentProduct.tags?.includes(tag))
+      );
+
+      // Return up to 3 similar products
+      return similar.slice(0, 3);
+    })
   );
 
   onAddToCart(product: Product) {
