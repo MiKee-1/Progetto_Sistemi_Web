@@ -26,7 +26,6 @@
 mat-card-content {
     display: flex;
     gap: 24px;
-    align-items: flex-start;
 
     img{
         max-width: 100%;
@@ -37,9 +36,10 @@ mat-card-content {
     .details {
         flex: 1;
         border: black 1px solid;
-        height: fit-content;
+        width: fit-content;
         padding: 2%;
         border-radius: 8px;
+        align-content: center;
     }
 }
 

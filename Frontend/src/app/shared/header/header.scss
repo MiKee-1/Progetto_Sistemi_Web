@@ -1,20 +1,28 @@
 .header {
-    background-color: white;
-    max-width: 70%;
-    margin: 0 auto;
-    padding: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    max-width: 100%;
+    margin: 0;
+    padding: 10px 20px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.left-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .Title {
-    color: black;
-    font-weight: bold;
-    font-size: 2em;
-    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-weight: 600;
+    font-size: 1.5em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
 }
 
 .spacer {
@@ -23,32 +31,37 @@
 
 mat-icon {
     color: white;
-    font-weight: bold;
 }
 
-.MenuButton {
-    background-color: #336699;
-    border-color: black;
-    border-width: 3px;
-    color: white;
-    border-radius: 5px;
-    margin: 2px;
-}
+// Stile per tutti i bottoni
+::ng-deep .header {
+    .mat-mdc-button,
+    .mat-mdc-icon-button,
+    .MenuButton {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        margin: 0 4px;
+        transition: all 0.3s ease;
 
-button[matIconButton], button[mat-button] {
-    background-color: #336699;
-    border-color: black;
-    border-width: 3px;
-    color: white;
-    border-radius: 5px;
-    margin: 2px;
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
 
-    mat-icon {
-        vertical-align: middle;
+        .mat-icon {
+            color: white;
+        }
+    }
+
+    .mat-badge-content {
+        background-color: #e91e63;
     }
 }
 
 mat-toolbar {
     display: flex;
-    justify-content: center;
+    position: relative;
 }
