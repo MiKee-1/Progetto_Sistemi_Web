@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { switchMap, map, combineLatest, tap } from 'rxjs';
 import { ProductApi } from '../../../core/services/product-api';
@@ -17,7 +17,7 @@ import { CartService } from '../../../core/services/cart.service';
   imports: [RouterModule, AsyncPipe, CurrencyPipe, MatCardModule, MatButtonModule, MatSnackBarModule],
 })
 
-export class ProductDetailPage implements OnInit {
+export class ProductDetailPage {
   private route = inject(ActivatedRoute);
   private svc = inject(ProductApi);
   private cartService = inject(CartService);
@@ -31,10 +31,6 @@ export class ProductDetailPage implements OnInit {
       setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
     }),
   );
-
-  ngOnInit() {
-    // No additional subscription needed
-  }
 
   navigateToProduct(productId: string) {
     console.log('Navigating to product:', productId);
