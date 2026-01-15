@@ -25,12 +25,6 @@
     white-space: nowrap;
 }
 
-.spacer {
-    flex: 1;
-}
-
-//aggiunto per sistemare il bottone del menu decentrato
-
 // Stile per tutti i bottoni
 ::ng-deep .header {
     .mat-mdc-button,
@@ -56,10 +50,6 @@
         .mat-icon {
             color: white;
         }
-    }
-
-    .mat-badge-content {
-        background-color: #e91e63;
     }
 }
 
