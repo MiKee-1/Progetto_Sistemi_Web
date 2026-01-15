@@ -29,9 +29,7 @@
     flex: 1;
 }
 
-mat-icon {
-    color: white;
-}
+//aggiunto per sistemare il bottone del menu decentrato
 
 // Stile per tutti i bottoni
 ::ng-deep .header {
@@ -44,11 +42,15 @@ mat-icon {
         border-radius: 8px;
         margin: 0 4px;
         transition: all 0.3s ease;
+        //centra l'icona nel bottone
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         &:hover {
             background-color: rgba(255, 255, 255, 0.25);
             border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
+            transform: translateY(-5%);
         }
 
         .mat-icon {
