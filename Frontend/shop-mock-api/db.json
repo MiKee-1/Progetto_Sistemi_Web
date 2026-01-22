@@ -299,7 +299,7 @@
       "price": 70,
       "originalPrice": 80,
       "sale": true,
-      "thumbnail": "https://dummyimage.com/600x400/000000/fff.jpg&text=Laptop+Ultra+14",
+      "thumbnail": "https://m.media-amazon.com/images/I/710FLGQ1gkL._AC_UF1000,1000_QL80_.jpg",
       "tags": [
         "laptop",
         "notebook",
@@ -314,7 +314,7 @@
       "price": 70,
       "originalPrice": 70,
       "sale": false,
-      "thumbnail": "https://dummyimage.com/600x400/000000/fff.jpg&text=Laptop+Pro+16",
+      "thumbnail": "https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/dell-pro/pc16255/media-gallery/black/hd-fhd/laptop-dell-pro-pc16255-bk-hd-fhd-gallery-2.psd?fmt=png-alpha&pscan=auto&scl=1&hei=402&wid=738&qlt=100,1&resMode=sharp2&size=738,402&chrss=full",
       "tags": [
         "laptop",
         "notebook",
@@ -329,7 +329,7 @@
       "price": 105,
       "originalPrice": 115,
       "sale": true,
-      "thumbnail": "https://dummyimage.com/600x400/000000/fff.jpg&text=Laptop+Student+13",
+      "thumbnail": "https://p2-ofp.static.pub//fes/cms/2024/06/21/2vkbl9t2ukzpdjgrx535i2edx7rtp4659317.png",
       "tags": [
         "laptop",
         "notebook",
@@ -344,7 +344,7 @@
       "price": 140,
       "originalPrice": 150,
       "sale": true,
-      "thumbnail": "https://dummyimage.com/600x400/000000/fff.jpg&text=Monitor+24+Full+HD",
+      "thumbnail": "https://m.media-amazon.com/images/I/81VU843vLeL.jpg",
       "tags": [
         "monitor",
         "display",
@@ -359,7 +359,7 @@
       "price": 175,
       "originalPrice": 175,
       "sale": false,
-      "thumbnail": "https://dummyimage.com/600x400/000000/fff.jpg&text=Monitor+27+QHD",
+      "thumbnail": "https://m.media-amazon.com/images/I/71RKChuJA3L.jpg",
       "tags": [
         "monitor",
         "display",
@@ -374,7 +374,7 @@
       "price": 210,
       "originalPrice": 220,
       "sale": true,
-      "thumbnail": "https://dummyimage.com/600x400/000000/fff.jpg&text=Monitor+34+UltraWide",
+      "thumbnail": "https://www.lg.com/content/dam/channel/wcms/it/images/mn/ultrawide-34wr50qc-05-1-hdr-10-m.jpg",
       "tags": [
         "monitor",
         "display",
@@ -389,7 +389,7 @@
       "price": 245,
       "originalPrice": 255,
       "sale": true,
-      "thumbnail": "https://dummyimage.com/600x400/000000/fff.jpg&text=Mouse+Wireless+Pro",
+      "thumbnail": "https://resource.logitechg.com/c_fill,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-2-lightspeed/gallery/pro2-lightspeed-black-new-gallery1.png",
       "tags": [
         "mouse",
         "periferiche"
@@ -403,7 +403,7 @@
       "price": 280,
       "originalPrice": 280,
       "sale": false,
-      "thumbnail": "https://dummyimage.com/600x400/000000/fff.jpg&text=Mouse+Ergonomico+Office",
+      "thumbnail": "https://shop.cherry.de/media/catalog/product/cache/207e23213cf636ccdef205098cf3c8a3/2/3/2322-imageserver-php-id-83972a68970-iko249undlang-32undforce-1undpreset-7undlabel-jw-4500-2-topview-psdundfilename-jw-4500-2-topview.jpg",
       "tags": [
         "mouse",
         "periferiche"
@@ -417,7 +417,7 @@
       "price": 280,
       "originalPrice": 290,
       "sale": true,
-      "thumbnail": "https://dummyimage.com/600x400/000000/fff.jpg&text=Tastiera+Meccanica+Compact",
+      "thumbnail": "https://m.media-amazon.com/images/I/6135K4wwD8L.jpg",
       "tags": [
         "tastiera",
         "periferiche",
@@ -432,7 +432,7 @@
       "price": 315,
       "originalPrice": 325,
       "sale": true,
-      "thumbnail": "https://dummyimage.com/600x400/000000/fff.jpg&text=Tastiera+Wireless+Slim",
+      "thumbnail": "https://image.made-in-china.com/202f0j00AkjlHGUdSJqi/Wireless-Bluetooth-Mini-Keyboard-for-Pad-Phone-Ultra-Slim-Universal-Bluetooth-Keyboard.webp",
       "tags": [
         "tastiera",
         "periferiche",
