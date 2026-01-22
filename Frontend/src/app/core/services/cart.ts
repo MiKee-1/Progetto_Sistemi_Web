@@ -9,7 +9,7 @@ export class CartService {
   products$ = inject(ProductApi);
 
   list() {
-    return this.products$.list().pipe(
+    return this.products$.listAll().pipe(
       map(products => products.slice(0, 5)), // Example: limit to 5 products
     );
   }

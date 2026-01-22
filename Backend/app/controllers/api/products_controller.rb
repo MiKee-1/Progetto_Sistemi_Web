@@ -32,7 +32,18 @@ module Api
         @products = @products.reorder(created_at: :desc) # default: date_desc
       end
 
-      render json: @products
+      # Pagination
+      page = (params[:page] || 1).to_i
+      limit = (params[:limit] || 9).to_i
+      total = @products.count
+      @products = @products.limit(limit).offset((page - 1) * limit)
+
+      render json: {
+        products: @products,
+        total: total,
+        page: page,
+        limit: limit
+      }
     end
 
     # GET /api/products/:id

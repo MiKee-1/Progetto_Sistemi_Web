@@ -39,17 +39,17 @@ export class ProductDetailPage {
     });
   }
 
-  readonly similarProducts$ = combineLatest([this.product$, this.svc.list()]).pipe(
+  readonly similarProducts$ = combineLatest([this.product$, this.svc.listAll()]).pipe(
     map(([currentProduct, allProducts]) => {
       if (!currentProduct.tags || currentProduct.tags.length === 0) {
         return [];
       }
 
       // Filter products that share at least one tag with the current product
-      const similar = allProducts.filter(p =>
+      const similar = allProducts.filter((p: Product) =>
         p.id !== currentProduct.id &&
         p.tags &&
-        p.tags.some(tag => currentProduct.tags?.includes(tag))
+        p.tags.some((tag: string) => currentProduct.tags?.includes(tag))
       );
 
       // Return up to 3 similar products

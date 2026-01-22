@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Product } from '../models/product';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
@@ -8,6 +8,15 @@ export interface ProductFilters {
   minPrice?: number;
   maxPrice?: number;
   sort?: 'price_asc' | 'price_desc' | 'date_asc' | 'date_desc';
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedProducts {
+  products: Product[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 @Injectable({
@@ -18,7 +27,7 @@ export class ProductApi {
 
   constructor(private readonly http: HttpClient) { }
 
-  list(filters?: ProductFilters): Observable<Product[]> {
+  list(filters?: ProductFilters): Observable<PaginatedProducts> {
     let params = new HttpParams();
 
     if (filters) {
@@ -34,15 +43,24 @@ export class ProductApi {
       if (filters.sort) {
         params = params.set('sort', filters.sort);
       }
+      if (filters.page !== undefined) {
+        params = params.set('page', filters.page.toString());
+      }
+      if (filters.limit !== undefined) {
+        params = params.set('limit', filters.limit.toString());
+      }
     }
 
-    console.log('API request filters:', filters);
-    console.log('API request params:', params.toString());
-
-    return this.http.get<Product[]>(`${this.baseUrl}/products`, { params });
+    return this.http.get<PaginatedProducts>(`${this.baseUrl}/products`, { params });
   }
 
   getById(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.baseUrl}/products/${id}`);
+  }
+
+  listAll(filters?: Omit<ProductFilters, 'page' | 'limit'>): Observable<Product[]> {
+    return this.list({ ...filters, limit: 10000 }).pipe(
+      map(response => response.products)
+    );
   }
 }

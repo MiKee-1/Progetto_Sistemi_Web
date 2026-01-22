@@ -6,7 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { AsyncPipe } from '@angular/common';
-import { BehaviorSubject, map, debounceTime, distinctUntilChanged, switchMap, combineLatest } from 'rxjs';
+import { BehaviorSubject, map, debounceTime, distinctUntilChanged, switchMap, combineLatest, shareReplay } from 'rxjs';
+import { PaginatedProducts } from '../../../core/services/product-api';
 import { MatSelectModule } from '@angular/material/select';
 import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -48,29 +49,31 @@ export class ProductPage {
     return sortMap[sort];
   }
 
-  // Products filtered by backend
-  filteredProducts$ = this.filters$.pipe(
+  page$ = new BehaviorSubject(1);
+  pageSize = 9;
+
+  // Products from backend with server-side pagination
+  private paginatedResponse$ = combineLatest([this.filters$, this.page$]).pipe(
     debounceTime(300),
     distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
-    switchMap(filters => {
+    switchMap(([filters, page]) => {
       return this.service.list({
         title: filters.title || undefined,
         minPrice: filters.priceMin ? Number(filters.priceMin) : undefined,
         maxPrice: filters.priceMax ? Number(filters.priceMax) : undefined,
-        sort: this.mapSortToBackend(filters.sort)
+        sort: this.mapSortToBackend(filters.sort),
+        page: page,
+        limit: this.pageSize
       });
-    })
+    }),
+    shareReplay(1)
   );
 
-  page$ = new BehaviorSubject(1);
-  pageSize = 9;
-  paged$ = combineLatest([this.filteredProducts$, this.page$]).pipe(
-    map(([items, page]) => {
-      const start = (page - 1) * this.pageSize;
-      const end = start + this.pageSize;
-      return items.slice(start, end);
-    })
-  );
+  // Extract products from paginated response
+  paged$ = this.paginatedResponse$.pipe(map(response => response.products));
+
+  // Extract total count for paginator
+  total$ = this.paginatedResponse$.pipe(map(response => response.total));
   updateTitle(title: string) {
     this.page$.next(1); // Reset to first page when filters change
     this.filters$.next({ ...this.filters$.value, title: title });

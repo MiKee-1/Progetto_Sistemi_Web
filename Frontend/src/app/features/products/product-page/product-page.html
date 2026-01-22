@@ -30,7 +30,7 @@
         </mat-form-field>
 
     </form>
-    <mat-paginator [length]="(filteredProducts$ | async)?.length || 0" [pageSize]="pageSize"
+    <mat-paginator [length]="(total$ | async) || 0" [pageSize]="pageSize"
         [pageIndex]="((page$ | async)||1)-1" aria-label="Select page" (page)="onPage($event)">
     </mat-paginator>
 

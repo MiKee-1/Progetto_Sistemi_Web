@@ -97,7 +97,7 @@ export class AdminDashboard implements OnInit {
 
   loadProducts(): void {
     this.loading.set(true);
-    this.productApi.list().subscribe({
+    this.productApi.listAll().subscribe({
       next: (products) => {
         this.products.set(products);
         this.loading.set(false);
