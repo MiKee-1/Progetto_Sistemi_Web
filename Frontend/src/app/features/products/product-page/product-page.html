@@ -2,13 +2,13 @@
     <header class="header">
         <h2>Products</h2>
     </header>
-    <form class="filters">
-
-        <mat-form-field class="example-form-field">
+    <mat-form-field class="example-form-field">
             <mat-label>Cerca</mat-label>
             <input matInput type="search" name="title" placeholder="Cerca per titolo"
                 (input)="updateTitle($any($event.target).value)" />
-        </mat-form-field>
+    </mat-form-field>
+    
+    <form class="filters">    
         <mat-form-field class="example-form-field">
             <mat-label>Ordina per</mat-label>
             <mat-select [value]="currentSort$ | async" (selectionChange)="updateSort($any($event.value))">
