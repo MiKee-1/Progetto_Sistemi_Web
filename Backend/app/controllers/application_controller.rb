@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  include Pagy::Backend
+
   attr_reader :current_user
 
   private

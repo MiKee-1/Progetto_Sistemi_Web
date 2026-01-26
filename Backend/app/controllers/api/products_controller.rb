@@ -33,16 +33,13 @@ module Api
       end
 
       # Pagination
-      page = (params[:page] || 1).to_i
-      limit = (params[:limit] || 9).to_i
-      total = @products.count
-      @products = @products.limit(limit).offset((page - 1) * limit)
+      pagy, @products = pagy(@products, page: params[:page], limit: params[:limit] || 9)
 
       render json: {
         products: @products,
-        total: total,
-        page: page,
-        limit: limit
+        total: pagy.count,
+        page: pagy.page,
+        limit: pagy.limit
       }
     end
 
