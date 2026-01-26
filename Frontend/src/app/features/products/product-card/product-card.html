@@ -1,7 +1,9 @@
 <mat-card class="example-card" appearance="outlined">
     <mat-card-content>
         @if (product.thumbnail){
-        <img mat-card-image [src]="product.thumbnail" [alt]="product.title" />
+            <div class = "image-container">
+                <img mat-card-image [src]="product.thumbnail" [alt]="product.title" />
+            </div>
         }
         <div class="title">{{product.title}}</div>
         <!-- Prezzi -->
