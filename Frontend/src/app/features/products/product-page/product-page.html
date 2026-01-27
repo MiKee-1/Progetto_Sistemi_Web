@@ -47,7 +47,7 @@
     
     <div class="pagination-bottom">
         <mat-paginator [length]="(total$ | async) || 0" [pageSize]="pageSize"
-            [pageIndex]="((page$ | async)||1)-1" aria-label="Select page" (page)="onPage($event)">
+            [pageIndex]="((page$ | async)||1)-1" aria-label="Select page" (page)="onPage($event)" (click)="navigateToTop()">
         </mat-paginator>
     </div>
 

@@ -140,5 +140,9 @@ export class ProductPage {
     this.page$.next(e.pageIndex + 1);
   }
 
+  navigateToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
 }
 
