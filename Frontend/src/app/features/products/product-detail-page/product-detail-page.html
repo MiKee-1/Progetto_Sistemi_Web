@@ -58,7 +58,9 @@
             <div class="similar-products-grid">
                 @for (similar of similarProducts; track similar.id) {
                     <mat-card class="similar-product-card" (click)="navigateToProduct(similar.id)">
-                        <img mat-card-image [src]="similar.thumbnail" [alt]="similar.title"/>
+                        <div class="similar-product-image-container">
+                            <img mat-card-image [src]="similar.thumbnail" [alt]="similar.title"/>
+                        </div>
                         <mat-card-content>
                             <mat-card-title>{{ similar.title }}</mat-card-title>
                             <mat-card-subtitle>
