@@ -10,11 +10,12 @@ Applicazione e-commerce completa sviluppata con Angular (frontend) e Ruby on Rai
 - Rails 8.1.1 (API mode)
 - SQLite3 (development), PostgreSQL (production recommended)
 - JWT per autenticazione
+- Pagy per paginazione
 - RSpec per testing
 
 ### Frontend
 - Angular 21
-- TypeScript 5.7
+- TypeScript 5.9
 - Angular Material 21
 - RxJS con Signals
 
@@ -233,7 +234,7 @@ order_items
 ### API Endpoints
 
 #### Pubblici
-- `GET /api/products` - Lista prodotti (filtri opzionali: tag, q, page, per_page)
+- `GET /api/products` - Lista prodotti (filtri opzionali: title, min_price, max_price, sort, page, limit)
 - `GET /api/products/:id` - Dettaglio prodotto
 - `POST /api/register` - Registrazione utente
 - `POST /api/login` - Login (restituisce JWT token)
