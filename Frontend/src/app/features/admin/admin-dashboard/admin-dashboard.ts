@@ -6,8 +6,10 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { MatChipsModule, MatChipInputEvent } from '@angular/material/chips';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService, AdminStats, OrdersResponse } from '../../../core/services/admin.service';
 import { ProductApi } from '../../../core/services/product-api';
@@ -44,9 +46,11 @@ import { Order } from '../../../core/models/order';
     MatRow,
     MatFormField,
     MatLabel,
+    MatHint,
     MatInput,
     MatExpansionModule,
     MatDividerModule,
+    MatChipsModule,
   ],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.scss',
@@ -67,6 +71,8 @@ export class AdminDashboard implements OnInit {
   productsColumns = ['id', 'title', 'price', 'quantity', 'actions'];
   ordersColumns = ['id', 'customer', 'total', 'createdAt', 'actions'];
   recentOrdersColumns = ['id', 'customer', 'total', 'createdAt'];
+
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   constructor() {
     this.productForm = this.fb.group({
@@ -191,6 +197,22 @@ export class AdminDashboard implements OnInit {
       },
       error: (err) => console.error('Error adjusting quantity:', err),
     });
+  }
+
+  addTag(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim().toLowerCase();
+    if (value) {
+      const currentTags: string[] = this.productForm.get('tags')?.value || [];
+      if (!currentTags.includes(value)) {
+        this.productForm.patchValue({ tags: [...currentTags, value] });
+      }
+    }
+    event.chipInput!.clear();
+  }
+
+  removeTag(tag: string): void {
+    const currentTags: string[] = this.productForm.get('tags')?.value || [];
+    this.productForm.patchValue({ tags: currentTags.filter(t => t !== tag) });
   }
 
   resetForm(): void {

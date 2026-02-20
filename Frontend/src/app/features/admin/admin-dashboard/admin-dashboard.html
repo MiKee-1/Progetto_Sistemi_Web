@@ -144,6 +144,27 @@
                 <input matInput formControlName="thumbnail" />
               </mat-form-field>
 
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Tags</mat-label>
+                <mat-chip-grid #chipGrid>
+                  @for (tag of productForm.get('tags')?.value; track tag) {
+                    <mat-chip-row (removed)="removeTag(tag)">
+                      {{ tag }}
+                      <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </mat-chip-row>
+                  }
+                </mat-chip-grid>
+                <input
+                  placeholder="Scrivi un tag e premi Enter o virgola..."
+                  [matChipInputFor]="chipGrid"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  (matChipInputTokenEnd)="addTag($event)"
+                />
+                <mat-hint>Premi Enter o , per aggiungere un tag</mat-hint>
+              </mat-form-field>
+
               <div class="form-actions">
                 <button mat-raised-button color="primary" type="submit" [disabled]="!productForm.valid">
                   {{ editingProduct() ? 'Update' : 'Create' }} Product
