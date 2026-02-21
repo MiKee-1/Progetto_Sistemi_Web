@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild, ElementRef, effect } from '@angular/core';
+import Chart from 'chart.js/auto';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
@@ -65,6 +66,11 @@ export class AdminDashboard implements OnInit {
   orders = signal<OrdersResponse | null>(null);
   loading = signal(true);
 
+  @ViewChild('ordersChart') ordersChartRef?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('revenueChart') revenueChartRef?: ElementRef<HTMLCanvasElement>;
+  private ordersChart?: Chart;
+  private revenueChart?: Chart;
+
   productForm: FormGroup;
   editingProduct = signal<Product | null>(null);
 
@@ -85,6 +91,13 @@ export class AdminDashboard implements OnInit {
       quantity: [0, [Validators.required, Validators.min(0)]],
       thumbnail: [''],
       tags: [[]]
+    });
+
+    effect(() => {
+      const orders = this.orders();
+      if (orders) {
+        setTimeout(() => this.initCharts(orders.orders), 0);
+      }
     });
   }
 
@@ -252,6 +265,79 @@ export class AdminDashboard implements OnInit {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
+    });
+  }
+
+  private getDailyChartData(orders: any[]): { labels: string[]; counts: number[]; revenues: number[] } {
+    const map = new Map<string, { count: number; revenue: number }>();
+
+    for (const order of orders) {
+      const key = new Date(order.createdAt).toISOString().split('T')[0];
+      const existing = map.get(key) ?? { count: 0, revenue: 0 };
+      map.set(key, {
+        count: existing.count + 1,
+        revenue: existing.revenue + parseFloat(order.total),
+      });
+    }
+
+    const sorted = Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
+
+    return {
+      labels: sorted.map(([date]) => {
+        const [y, m, d] = date.split('-');
+        return `${d}/${m}/${y}`;
+      }),
+      counts: sorted.map(([, v]) => v.count),
+      revenues: sorted.map(([, v]) => parseFloat(v.revenue.toFixed(2))),
+    };
+  }
+
+  private initCharts(orders: any[]): void {
+    if (!this.ordersChartRef || !this.revenueChartRef) return;
+
+    const { labels, counts, revenues } = this.getDailyChartData(orders);
+
+    this.ordersChart?.destroy();
+    this.revenueChart?.destroy();
+
+    this.ordersChart = new Chart(this.ordersChartRef!.nativeElement, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Ordini',
+          data: counts,
+          backgroundColor: 'rgba(63, 81, 181, 0.6)',
+          borderColor: 'rgba(63, 81, 181, 1)',
+          borderWidth: 1,
+        }],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1 } },
+        },
+      },
+    });
+
+    this.revenueChart = new Chart(this.revenueChartRef!.nativeElement, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Guadagno (€)',
+          data: revenues,
+          backgroundColor: 'rgba(76, 175, 80, 0.6)',
+          borderColor: 'rgba(76, 175, 80, 1)',
+          borderWidth: 1,
+        }],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true },
+        },
+      },
     });
   }
 }

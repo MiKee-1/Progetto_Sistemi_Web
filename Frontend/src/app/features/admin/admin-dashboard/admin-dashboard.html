@@ -53,44 +53,30 @@
             </mat-card>
           </div>
 
-          @if (stats()!.recent_orders.length > 0) {
-            <mat-card class="recent-orders">
-              <mat-card-header>
-                <mat-card-title>Recent Orders</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                <table mat-table [dataSource]="stats()!.recent_orders">
-                  <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef>Order ID</th>
-                    <td mat-cell *matCellDef="let order">#{{ order.id }}</td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="customer">
-                    <th mat-header-cell *matHeaderCellDef>Customer</th>
-                    <td mat-cell *matCellDef="let order">
-                      {{ order.customer?.firstName }} {{ order.customer?.lastName }}
-                    </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="total">
-                    <th mat-header-cell *matHeaderCellDef>Total</th>
-                    <td mat-cell *matCellDef="let order">${{ order.total }}</td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="createdAt">
-                    <th mat-header-cell *matHeaderCellDef>Date</th>
-                    <td mat-cell *matCellDef="let order">{{ order.createdAt | date:'short' }}</td>
-                  </ng-container>
-
-                  <tr mat-header-row *matHeaderRowDef="recentOrdersColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: recentOrdersColumns"></tr>
-                </table>
-              </mat-card-content>
-            </mat-card>
-          }
         } @else {
           <div class="loading-container">
             <mat-spinner></mat-spinner>
+          </div>
+        }
+
+        @if (orders()) {
+          <div class="charts-grid">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Daily Orders</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <canvas #ordersChart></canvas>
+              </mat-card-content>
+            </mat-card>
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Daily Revenue</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <canvas #revenueChart></canvas>
+              </mat-card-content>
+            </mat-card>
           </div>
         }
       </div>

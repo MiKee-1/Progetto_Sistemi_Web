@@ -250,6 +250,25 @@ mat-form-field {
   }
 }
 
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+
+  mat-card-content {
+    padding: 1rem;
+  }
+
+  canvas {
+    max-height: 18rem;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
 // Responsive design
 @media (max-width: 768px) {
   .orders-list {
