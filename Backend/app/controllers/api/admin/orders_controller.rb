@@ -14,13 +14,13 @@ module Api
           orders = orders.where(user_id: params[:user_id])
         end
 
-        # Statistiche
+        # Statistiche (calcolate su Order direttamente per evitare duplicati da JOIN)
         stats = {
-          total_orders: orders.count,
-          total_revenue: orders.sum(:total).to_f,
+          total_orders: Order.count,
+          total_revenue: Order.sum(:total).to_f,
           orders_by_status: {
-            with_user: orders.where.not(user_id: nil).count,
-            guest: orders.where(user_id: nil).count
+            with_user: Order.where.not(user_id: nil).count,
+            guest: Order.where(user_id: nil).count
           }
         }
 
