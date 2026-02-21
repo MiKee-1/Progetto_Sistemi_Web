@@ -280,7 +280,9 @@ export class AdminDashboard implements OnInit {
       });
     }
 
-    const sorted = Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
+    const sorted = Array.from(map.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .slice(-10);
 
     return {
       labels: sorted.map(([date]) => {
