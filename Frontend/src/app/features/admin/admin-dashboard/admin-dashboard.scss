@@ -23,10 +23,10 @@
     text-align: center;
 
     &.warning-card {
-      background-color: #fff3e0;
+      background-color: #F5E6C8;
 
       .stat-value {
-        color: #ff6f00;
+        color: #B8620E;
       }
     }
   }
@@ -83,7 +83,7 @@
     }
 
     small {
-      color: #666;
+      color: #7A5C44;
       font-size: 12px;
     }
   }
@@ -112,18 +112,18 @@ mat-form-field {
       font-size: 64px;
       width: 64px;
       height: 64px;
-      color: #999;
+      color: #C8A882;
       margin-bottom: 1rem;
     }
 
     h2 {
-      color: #666;
+      color: #7A5C44;
       font-weight: 400;
       margin-bottom: 0.5rem;
     }
 
     p {
-      color: #999;
+      color: #A08060;
       margin: 0;
     }
   }
@@ -136,12 +136,12 @@ mat-form-field {
 
       .order-id {
         font-weight: 500;
-        color: #333;
+        color: #3D2B1F;
       }
 
       .order-date {
         font-size: 0.875rem;
-        color: #666;
+        color: #7A5C44;
       }
     }
 
@@ -151,13 +151,13 @@ mat-form-field {
       gap: 1rem;
 
       .order-items {
-        color: #666;
+        color: #7A5C44;
         font-size: 0.875rem;
       }
 
       .order-total {
         font-weight: 500;
-        color: #1976d2;
+        color: #8B5E3C;
         font-size: 1rem;
       }
     }
@@ -171,13 +171,13 @@ mat-form-field {
         h3 {
           font-size: 1rem;
           font-weight: 500;
-          color: #333;
+          color: #3D2B1F;
           margin-bottom: 0.75rem;
         }
 
         p {
           margin: 0.25rem 0;
-          color: #666;
+          color: #7A5C44;
         }
 
         &.total-section {
@@ -190,7 +190,7 @@ mat-form-field {
             .total-amount {
               font-size: 1.5rem;
               font-weight: 500;
-              color: #1976d2;
+              color: #8B5E3C;
             }
           }
 
@@ -217,7 +217,7 @@ mat-form-field {
           justify-content: space-between;
           align-items: center;
           padding: 0.75rem;
-          background-color: #f5f5f5;
+          background-color: #F5EED8;
           border-radius: 4px;
 
           .item-info {
@@ -226,19 +226,19 @@ mat-form-field {
             align-items: center;
 
             .item-name {
-              color: #333;
+              color: #3D2B1F;
               font-weight: 400;
             }
 
             .item-quantity {
-              color: #666;
+              color: #7A5C44;
               font-size: 0.875rem;
             }
           }
 
           .item-price {
             font-weight: 500;
-            color: #1976d2;
+            color: #8B5E3C;
           }
         }
       }

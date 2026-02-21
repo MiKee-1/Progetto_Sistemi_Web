@@ -1,3 +1,12 @@
+    h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 700;
+        letter-spacing: 1rem;
+        text-transform: uppercase;
+        font-style: italic;
+        color:#382411;
+    }
     .container {
         display: flex;
         justify-content: center;
@@ -36,7 +45,7 @@
     .empty {
         grid-column: 1 / -1;
         margin-top: 1rem;
-        color: #6b7280;
+        color: #A08060;
         text-align: center;
     }
 

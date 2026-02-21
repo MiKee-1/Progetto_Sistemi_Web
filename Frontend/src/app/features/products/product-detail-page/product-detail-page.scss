@@ -14,7 +14,7 @@
 
 .price-original {
     text-decoration: line-through;
-    color: #666;
+    color: #A08060;
     margin-right: 12px;
 }
 
@@ -43,7 +43,7 @@ mat-card-content {
 
     .details {
         flex: 1;
-        border: black 1px solid;
+        border: #C8A882 1px solid;
         width: fit-content;
         padding: 2%;
         border-radius: 0.5rem;
@@ -75,7 +75,7 @@ mat-card-actions {
         font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 1.5rem;
-        color: #333;
+        color: #3D2B1F;
     }
 
     .similar-products-grid {
@@ -99,7 +99,7 @@ mat-card-actions {
                 justify-content: center !important;
                 align-items: center !important;
                 border-radius: 0.5rem;
-                border: 1px solid #ccc;
+                border: 1px solid #C8A882;
             }
 
             img {
@@ -123,7 +123,7 @@ mat-card-actions {
                 mat-card-subtitle {
                     font-size: 14px;
                     font-weight: 600;
-                    color: #333;
+                    color: #3D2B1F;
 
                     .price-sale {
                         color: #d32f2f;
@@ -132,7 +132,7 @@ mat-card-actions {
 
                     .price-original {
                         text-decoration: line-through;
-                        color: #999;
+                        color: #A08060;
                         font-size: 12px;
                     }
                 }
