@@ -8,6 +8,13 @@
     </mat-card-header>
     <mat-card-content>
       <div class="filters-grid">
+        <!-- Ricerca per prodotto -->
+        <mat-form-field appearance="outline" class="product-search-field">
+          <mat-label>Search by Product</mat-label>
+          <input matInput [(ngModel)]="productTitle" placeholder="Product name...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
         <!-- Filtro data inizio -->
         <mat-form-field appearance="outline">
           <mat-label>Start Date</mat-label>

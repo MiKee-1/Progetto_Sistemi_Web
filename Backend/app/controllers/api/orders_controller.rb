@@ -131,6 +131,13 @@ module Api
       orders = orders.where('total <= ?', max_total)
     end
 
+    # Filtro per titolo prodotto
+    if params[:product_title].present?
+      orders = orders.joins(order_items: :product)
+                     .where('products.title LIKE ?', "%#{params[:product_title]}%")
+                     .distinct
+    end
+
     orders
   end
 

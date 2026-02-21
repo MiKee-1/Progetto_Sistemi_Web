@@ -8,6 +8,7 @@ export interface OrderFilters {
   endDate?: string;
   minTotal?: number;
   maxTotal?: number;
+  productTitle?: string;
 }
 
 @Injectable({
@@ -37,6 +38,9 @@ export class OrderService {
       }
       if (filters.maxTotal !== undefined) {
         params = params.set('max_total', filters.maxTotal.toString());
+      }
+      if (filters.productTitle) {
+        params = params.set('product_title', filters.productTitle);
       }
     }
 

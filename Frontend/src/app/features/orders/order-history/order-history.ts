@@ -46,6 +46,7 @@ export class OrderHistoryPage implements OnInit {
   endDate: Date | null = null;
   minTotal: number | null = null;
   maxTotal: number | null = null;
+  productTitle: string = '';
 
   ngOnInit(): void {
     this.loadOrders();
@@ -69,6 +70,9 @@ export class OrderHistoryPage implements OnInit {
     if (this.maxTotal !== null && this.maxTotal > 0) {
       filters.maxTotal = this.maxTotal;
     }
+    if (this.productTitle.trim()) {
+      filters.productTitle = this.productTitle.trim();
+    }
 
     this.orderService.getOrders(filters).subscribe({
       next: (orders) => {
@@ -91,6 +95,7 @@ export class OrderHistoryPage implements OnInit {
     this.endDate = null;
     this.minTotal = null;
     this.maxTotal = null;
+    this.productTitle = '';
     this.loadOrders();
   }
 

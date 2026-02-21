@@ -67,20 +67,26 @@
 .cart-item {
   .item-details {
     display: grid;
-    grid-template-columns: 100px 1fr auto;
-    gap: 1rem;
+    grid-template-columns: 7rem 1fr auto;
     align-items: center;
-
-    @media (max-width: 600px) {
+    gap: 6rem;
+    @media (max-width: 47rem) {
       grid-template-columns: 1fr;
     }
   }
 
+  .image-container{
+    display: flex;
+    justify-content: center;
+    width: 10rem;
+    height: 7rem;
+  }
+
   .item-image {
-    width: 100px;
-    height: 100px;
+    width: fit-content;
+    height: 6.8rem;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 0.75rem;
   }
 
   .item-info {
@@ -139,12 +145,12 @@
 
 .cart-summary {
   mat-card {
-    position: sticky;
-    top: 2rem;
+    position: relative;
+    margin-top: 2rem;;
   }
 
   mat-card-content {
-    padding: 1rem 0;
+    padding: 1.5rem;
   }
 
   .summary-row {

@@ -43,9 +43,11 @@
               <div class="item-details">
                 <!-- Product Image -->
                 @if (item.product.thumbnail) {
-                  <img [src]="item.product.thumbnail"
-                       [alt]="item.product.title"
-                       class="item-image">
+                  <div class="image-container">
+                    <img [src]="item.product.thumbnail"
+                         [alt]="item.product.title"
+                         class="item-image">
+                  </div>
                 }
 
                 <!-- Product Info -->
@@ -93,8 +95,10 @@
         }
       </div>
 
-      <!-- Cart Summary -->
-      <div class="cart-summary">
+    </div>
+    
+    <!-- Cart Summary -->
+    <div class="cart-summary">
         <mat-card appearance="outlined">
           <mat-card-header>
             <mat-card-title>Order Summary</mat-card-title>
@@ -130,6 +134,6 @@
           </mat-card-actions>
         </mat-card>
       </div>
-    </div>
+
   }
 </div>
