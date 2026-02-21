@@ -77,16 +77,19 @@
 
   .image-container{
     display: flex;
-    justify-content: center;
-    width: 10rem;
-    height: 7rem;
+    justify-content: center !important;
+    align-items: center !important;
+    border-radius: 0.5rem; 
+    width: 12rem;
+    height: 8rem;
   }
 
-  .item-image {
+  img {
     width: fit-content;
-    height: 6.8rem;
-    object-fit: cover;
-    border-radius: 0.75rem;
+    max-width: 90%;
+    height: fit-content;
+    max-height: 7.8rem;
+    border-radius: 0.5rem;
   }
 
   .item-info {
