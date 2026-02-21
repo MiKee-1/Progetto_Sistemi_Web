@@ -103,8 +103,8 @@ export class ProductPage {
       next: () => {
         this.snackBar.open(`${product.title} added to cart`, 'View Cart', {
           duration: 3000,
-          horizontalPosition: 'end',
-          verticalPosition: 'top'
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
         }).onAction().subscribe(() => {
           // Navigate to cart when "View Cart" is clicked
           this.router.navigate(['/cart']);

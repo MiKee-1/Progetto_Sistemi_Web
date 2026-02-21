@@ -71,8 +71,8 @@ export class ProductDetailPage {
       next: () => {
         this.snackBar.open(`${product.title} aggiunto al carrello`, 'Vai al carrello', {
           duration: 3000,
-          horizontalPosition: 'end',
-          verticalPosition: 'top'
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
         }).onAction().subscribe(() => {
           // Navigate to cart when "Vai al carrello" is clicked
           this.router.navigate(['/cart']);
