@@ -138,6 +138,20 @@ docker exec progetto_sistemi_web-frontend-1 npm install
 docker exec progetto_sistemi_web-frontend-1 npm run build
 ```
 
+
+#### Comando per aggiungere un ordine da console ruby:
+```ruby
+product = Product.first  # oppure Product.find("id-del-prodotto")
+order = Order.create!(
+  customer: { "firstName" => "Mario", "lastName" => "Rossi", "email" => "mario@test.com" },
+  address:  { "street" => "Via Roma 1", "city" => "Milano", "zip" => "20100" },
+  total:    product.price,
+  order_items_attributes: [
+    { product_id: product.id, quantity: 1, unit_price: product.price }
+  ]
+)
+```
+
 ---
 
 ## Utilizzo Applicazione
