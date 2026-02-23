@@ -260,18 +260,18 @@
             </mat-card>
 
             <!-- Accordion con gli ordini -->
-            <mat-accordion *ngIf="orders()!.orders.length > 0">
-              <mat-expansion-panel *ngFor="let order of orders()!.orders">
+            <mat-accordion *ngIf="orders()!.orders.length > 0" class="orders-accordion">
+              <mat-expansion-panel *ngFor="let order of orders()!.orders" class="order-panel">
                 <mat-expansion-panel-header>
                   <mat-panel-title>
                     <div class="order-header">
-                      <span class="order-id">Order #{{ order.id }}</span>
+                      <span class="order-id">#{{ order.id }}</span>
                       <span class="order-date">{{ formatOrderDate(order.createdAt) }}</span>
                     </div>
                   </mat-panel-title>
                   <mat-panel-description>
                     <div class="order-summary">
-                      <span class="order-items">{{ getOrderItemsCount(order) }} items</span>
+                      <span class="order-items-badge">{{ getOrderItemsCount(order) }} items</span>
                       <span class="order-total">€{{ order.total }}</span>
                     </div>
                   </mat-panel-description>
@@ -279,34 +279,45 @@
 
                 <!-- Dettagli ordine -->
                 <div class="order-details">
-                  <!-- Informazioni cliente -->
-                  <div class="section">
-                    <h3>Customer Information</h3>
-                    @if (order.user) {
-                      <p><strong>Name:</strong> {{ order.user.firstName || 'N/A' }} {{ order.user.lastName || '' }}</p>
-                      <p><strong>Email:</strong> {{ order.user.email || 'N/A' }}</p>
-                      <p><strong>Type:</strong> Registered User</p>
-                    } @else {
-                      <p><strong>Name:</strong> {{ order.customer?.firstName || 'N/A' }} {{ order.customer?.lastName || '' }}</p>
-                      <p><strong>Email:</strong> {{ order.customer?.email || 'N/A' }}</p>
-                      <p><strong>Type:</strong> Guest</p>
-                    }
+                  <div class="details-grid">
+                    <!-- Informazioni cliente -->
+                    <div class="info-card">
+                      <div class="info-card-header">
+                        <mat-icon>person</mat-icon>
+                        <h3>Customer</h3>
+                      </div>
+                      <div class="info-card-content">
+                        @if (order.user) {
+                          <p class="customer-name">{{ order.user.firstName || 'N/A' }} {{ order.user.lastName || '' }}</p>
+                          <p class="customer-email">{{ order.user.email || 'N/A' }}</p>
+                          <p class="customer-type"><span class="badge registered">Registered</span></p>
+                        } @else {
+                          <p class="customer-name">{{ order.customer?.firstName || 'N/A' }} {{ order.customer?.lastName || '' }}</p>
+                          <p class="customer-email">{{ order.customer?.email || 'N/A' }}</p>
+                          <p class="customer-type"><span class="badge guest">Guest</span></p>
+                        }
+                      </div>
+                    </div>
+
+                    <!-- Indirizzo di spedizione -->
+                    <div class="info-card">
+                      <div class="info-card-header">
+                        <mat-icon>location_on</mat-icon>
+                        <h3>Shipping</h3>
+                      </div>
+                      <div class="info-card-content">
+                        <p>{{ order.address?.street || 'N/A' }}</p>
+                        <p>{{ order.address?.city || 'N/A' }}, {{ order.address?.zip || 'N/A' }}</p>
+                      </div>
+                    </div>
                   </div>
-
-                  <mat-divider></mat-divider>
-
-                  <!-- Indirizzo di spedizione -->
-                  <div class="section">
-                    <h3>Shipping Address</h3>
-                    <p>{{ order.address?.street || 'N/A' }}</p>
-                    <p>{{ order.address?.city || 'N/A' }}, {{ order.address?.zip || 'N/A' }}</p>
-                  </div>
-
-                  <mat-divider></mat-divider>
 
                   <!-- Prodotti ordinati -->
-                  <div class="section">
-                    <h3>Order Items</h3>
+                  <div class="products-section">
+                    <div class="products-header">
+                      <mat-icon>inventory_2</mat-icon>
+                      <h3>Order Items</h3>
+                    </div>
                     <div class="order-items-list">
                       <div *ngFor="let item of order.orderItems" class="order-item">
                         <div class="item-info">
@@ -316,22 +327,19 @@
                         <span class="item-price">€{{ (item.unitPrice * item.quantity).toFixed(2) }}</span>
                       </div>
                     </div>
+                    <!-- Totale -->
+                    <div class="total-row">
+                      <span class="total-label">Order Total</span>
+                      <span class="total-amount">€{{ order.total }}</span>
+                    </div>
                   </div>
 
-                  <mat-divider></mat-divider>
-
-                  <!-- Totale e azioni -->
-                  <div class="section total-section">
-                    <div class="total-row">
-                      <h3>Total</h3>
-                      <p class="total-amount">€{{ order.total }}</p>
-                    </div>
-                    <div class="admin-actions">
-                      <button mat-raised-button color="warn" (click)="onDeleteOrder(order.id)">
-                        <mat-icon>delete</mat-icon>
-                        Delete Order
-                      </button>
-                    </div>
+                  <!-- Admin Actions -->
+                  <div class="admin-actions">
+                    <button mat-raised-button color="warn" (click)="onDeleteOrder(order.id)">
+                      <mat-icon>delete</mat-icon>
+                      Delete Order
+                    </button>
                   </div>
                 </div>
               </mat-expansion-panel>
