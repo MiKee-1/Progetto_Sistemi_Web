@@ -231,77 +231,6 @@ order_items
 └── timestamps
 ```
 
-### API Endpoints
-
-#### Pubblici
-- `GET /api/products` - Lista prodotti (filtri opzionali: title, min_price, max_price, sort, page, limit)
-- `GET /api/products/:id` - Dettaglio prodotto
-- `POST /api/register` - Registrazione utente
-- `POST /api/login` - Login (restituisce JWT token)
-
-#### Autenticati (richiede header Authorization: Bearer <token>)
-- `GET /api/me` - Profilo utente corrente
-- `GET /api/cart` - Visualizza carrello
-- `POST /api/cart/items` - Aggiungi prodotto al carrello
-- `PATCH /api/cart/items/:id` - Aggiorna quantità
-- `DELETE /api/cart/items/:id` - Rimuovi articolo
-- `DELETE /api/cart` - Svuota carrello
-- `GET /api/orders` - Lista ordini (utente vede solo i propri, admin vede tutti)
-- `POST /api/orders` - Crea ordine da carrello
-
-#### Admin (richiede ruolo admin)
-- `POST /api/admin/products` - Crea prodotto
-- `PUT/PATCH /api/admin/products/:id` - Aggiorna prodotto
-- `DELETE /api/admin/products/:id` - Elimina prodotto
-- `PATCH /api/admin/products/:id/adjust_quantity` - Aggiusta inventario
-- `GET /api/admin/orders` - Lista tutti ordini con statistiche
-- `GET /api/admin/orders/:id` - Dettaglio ordine
-- `DELETE /api/admin/orders/:id` - Elimina ordine
-- `GET /api/admin/stats` - Statistiche dashboard
-
-### Flusso Autenticazione
-
-1. **Registrazione/Login:**
-   - Frontend invia credenziali a `POST /api/login`
-   - Backend valida credenziali e genera JWT token
-   - Token contiene: `{ user_id, role, exp: 24h }`
-   - Frontend salva token in localStorage
-
-2. **Richieste Autenticate:**
-   - HttpInterceptor aggiunge automaticamente header: `Authorization: Bearer <token>`
-   - Backend verifica token tramite `ApplicationController#authenticate_request`
-   - Se valido, imposta `@current_user`
-
-3. **Protezione Route:**
-   - Backend: `before_action :require_authentication!` e `require_admin!`
-   - Frontend: Guards `checkoutGuardGuard`, `adminGuard`
-
-### Flusso Carrello → Checkout → Ordine
-
-1. **Aggiunta Carrello:**
-   - Utente clicca "Add to Cart"
-   - Frontend: `CartService.addToCart(productId, quantity)`
-   - Backend: Crea/Aggiorna CartItem associato a Cart utente
-   - Validazione: stock disponibile
-
-2. **Visualizzazione Carrello:**
-   - Frontend carica carrello da `GET /api/cart`
-   - Calcolo totale server-side
-   - Modifica quantità: `PATCH /api/cart/items/:id`
-
-3. **Checkout:**
-   - Protezione: richiede login (guard)
-   - Form validato: customer info, address, privacy
-   - Submit: `POST /api/orders` con dati form
-
-4. **Creazione Ordine:**
-   - Backend:
-     - Validazione: carrello non vuoto, stock disponibile
-     - Transaction: crea Order, copia CartItems → OrderItems
-     - Decrementa quantità prodotti
-     - Svuota carrello
-   - Frontend: redirect a conferma, ricarica carrello
-
 ## Funzionalità Avanzate Implementate
 
 ### 1. Area Amministratore 
@@ -328,7 +257,15 @@ Dashboard completa con:
   - Backend: `before_action :require_admin!`
   - Frontend: `adminGuard` su route `/admin`
 
+### 2. Filtri avanzati nell'o storico ordini
 
+Possibilità di eseguire ricerche degli ordini con filtri personalizzati
+- **Ricerca del prodotto per nome**
+   - possibilità di cercare uno specifico prodotto per ogni ordine
+- **Ricerca per data (inizio e fine)**
+   - possibilità di vedere gli ordini a partire da/entro una tale data
+- **Spesa minima e massima effettuata nell'ordine**
+   - possibilità di vedere gli ordini dove si ha speso almeno/al massimo una somma di denaro
 
 ## Testing
  - **Un test su controller e un test su model**
