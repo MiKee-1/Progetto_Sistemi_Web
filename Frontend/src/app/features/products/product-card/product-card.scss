@@ -5,6 +5,9 @@
     text-align: center;
     display: flex;
     flex-direction: column;
+    background: white;
+    border-width: 0.4cap;
+    border-color: #684630;
 
     mat-card-content {
         padding: 1rem !important;
@@ -96,5 +99,6 @@
         flex: 1;
         font-size: 0.875rem;
         padding: 0.4rem 0.8rem;
+        background: #684630;
     }
 }

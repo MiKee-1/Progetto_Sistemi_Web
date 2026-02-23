@@ -57,3 +57,20 @@
         display: flex;
         justify-content: center;
     }
+
+    mat-paginator{
+        background: #fff5e7;
+    }
+
+
+    .example-form-field {
+      ::ng-deep {
+        .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+          background-color: white !important;
+        }
+
+        .mat-mdc-form-field-focus-overlay {
+          background-color: transparent !important;
+        }
+      }
+    }
