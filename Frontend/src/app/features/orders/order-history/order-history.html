@@ -1,8 +1,10 @@
 <div class="order-history-container">
   <h1 class="page-title">Storico Ordini</h1>
 
-  <!-- Filtri -->
-  <mat-card class="filters-card">
+  <div class="main-content">
+    <!-- Filtri -->
+    <aside class="filters-sidebar">
+      <mat-card class="filters-card">
     <mat-card-header>
       <mat-card-title>Filtri</mat-card-title>
     </mat-card-header>
@@ -58,8 +60,11 @@
       </div>
     </mat-card-content>
   </mat-card>
+    </aside>
 
-  <!-- Loading spinner -->
+    <!-- Results Section -->
+    <section class="results-section">
+      <!-- Loading spinner -->
   <div *ngIf="loading()" class="loading-container">
     <mat-spinner></mat-spinner>
     <p>Caricamento ordini...</p>
@@ -87,18 +92,18 @@
     </mat-card>
 
     <!-- Accordion con gli ordini -->
-    <mat-accordion *ngIf="orders().length > 0">
-      <mat-expansion-panel *ngFor="let order of orders()">
+    <mat-accordion *ngIf="orders().length > 0" class="orders-accordion">
+      <mat-expansion-panel *ngFor="let order of orders()" class="order-panel">
         <mat-expansion-panel-header>
           <mat-panel-title>
             <div class="order-header">
-              <span class="order-id">Ordine numero: {{ order.id }}</span>
+              <span class="order-id">#{{ order.id }}</span>
               <span class="order-date">{{ formatOrderDate(order.createdAt) }}</span>
             </div>
           </mat-panel-title>
           <mat-panel-description>
             <div class="order-summary">
-              <span class="order-items">{{ getOrderItemsCount(order) }} items</span>
+              <span class="order-items-badge">{{ getOrderItemsCount(order) }} articoli</span>
               <span class="order-total">€{{ order.total }}</span>
             </div>
           </mat-panel-description>
@@ -106,27 +111,38 @@
 
         <!-- Dettagli ordine -->
         <div class="order-details">
-          <!-- Informazioni cliente -->
-          <div class="section">
-            <h3>Informazioni Cliente</h3>
-            <p><strong>Nome:</strong> {{ order.customer.firstName || 'N/A' }} {{ order.customer.lastName || '' }}</p>
-            <p><strong>Email:</strong> {{ order.customer.email || 'N/A' }}</p>
+          <div class="details-grid">
+            <!-- Informazioni cliente -->
+            <div class="info-card">
+              <div class="info-card-header">
+                <mat-icon>person</mat-icon>
+                <h3>Cliente</h3>
+              </div>
+              <div class="info-card-content">
+                <p class="customer-name">{{ order.customer.firstName || 'N/A' }} {{ order.customer.lastName || '' }}</p>
+                <p class="customer-email">{{ order.customer.email || 'N/A' }}</p>
+              </div>
+            </div>
+
+            <!-- Indirizzo di spedizione -->
+            <div class="info-card">
+              <div class="info-card-header">
+                <mat-icon>location_on</mat-icon>
+                <h3>Spedizione</h3>
+              </div>
+              <div class="info-card-content">
+                <p>{{ order.address.street || 'N/A' }}</p>
+                <p>{{ order.address.city || 'N/A' }}, {{ order.address.zip || 'N/A' }}</p>
+              </div>
+            </div>
           </div>
-
-          <mat-divider></mat-divider>
-
-          <!-- Indirizzo di spedizione -->
-          <div class="section">
-            <h3>Indirizzo di Spedizione</h3>
-            <p>{{ order.address.street || 'N/A' }}</p>
-            <p>{{ order.address.city || 'N/A' }}, {{ order.address.zip || 'N/A' }}</p>
-          </div>
-
-          <mat-divider></mat-divider>
 
           <!-- Prodotti ordinati -->
-          <div class="section">
-            <h3>Prodotti Ordinati</h3>
+          <div class="products-section">
+            <div class="products-header">
+              <mat-icon>inventory_2</mat-icon>
+              <h3>Prodotti Ordinati</h3>
+            </div>
             <div class="order-items-list">
               <div *ngFor="let item of order.orderItems" class="order-item">
                 <div class="item-info">
@@ -136,17 +152,16 @@
                 <span class="item-price">€{{ (item.unitPrice * item.quantity).toFixed(2) }}</span>
               </div>
             </div>
-          </div>
-
-          <mat-divider></mat-divider>
-
-          <!-- Totale -->
-          <div class="section total-section">
-            <h3>Totale</h3>
-            <p class="total-amount">€{{ order.total }}</p>
+            <!-- Totale -->
+            <div class="total-row">
+              <span class="total-label">Totale Ordine</span>
+              <span class="total-amount">€{{ order.total }}</span>
+            </div>
           </div>
         </div>
       </mat-expansion-panel>
     </mat-accordion>
+  </div>
+    </section>
   </div>
 </div>

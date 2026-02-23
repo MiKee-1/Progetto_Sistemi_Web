@@ -7,8 +7,9 @@
 }
 
 .login-card {
-  max-width: 450px;
+  max-width: 30rem;
   width: 100%;
+  background: white;
 }
 
 .full-width {
@@ -49,4 +50,12 @@
       text-decoration: underline;
     }
   }
+}
+
+mat-card-header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  color:#382411;
 }
