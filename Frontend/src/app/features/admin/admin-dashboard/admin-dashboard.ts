@@ -203,12 +203,23 @@ export class AdminDashboard implements OnInit {
   }
 
   onAdjustQuantity(id: string, adjustment: number): void {
+    // Optimistic update - aggiorna localmente per evitare scroll reset
+    this.products.update(products =>
+      products.map(p =>
+        p.id === id ? { ...p, quantity: (p.quantity || 0) + adjustment } : p
+      )
+    );
+
     this.adminService.adjustQuantity(id, adjustment).subscribe({
       next: () => {
-        this.loadProducts();
+        // Aggiorna solo le stats, i prodotti sono già aggiornati localmente
         this.loadStats();
       },
-      error: (err) => console.error('Error adjusting quantity:', err),
+      error: (err) => {
+        console.error('Error adjusting quantity:', err);
+        // In caso di errore, ricarica per ripristinare lo stato corretto
+        this.loadProducts();
+      },
     });
   }
 

@@ -150,6 +150,8 @@ order = Order.create!(
     { product_id: product.id, quantity: 1, unit_price: product.price }
   ]
 )
+
+order.update_column(:creatred_at, 3.days_ago)
 ```
 
 ---
