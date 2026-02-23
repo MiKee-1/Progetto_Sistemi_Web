@@ -1,5 +1,11 @@
+mat-card-header{
+    border-bottom: #684630 0.3cap solid;
+    margin-bottom: 5rem;
+    max-height: 3rem;
+}
+
 .availability {
-    margin-top: 16px;
+    margin-top: 1rem;
     font-weight: 500;
 
     .available {
@@ -25,7 +31,8 @@
 
 mat-card-content {
     display: flex;
-    gap: 24px;
+    gap: 1.6rem;
+    align-items:flex-start;
 
     .image-container{
         height: 30rem;
@@ -35,7 +42,7 @@ mat-card-content {
     }
 
     img{
-        width: fit-content;
+        width: 100%;
         height: 25rem;
         flex-shrink: 0;
         border-radius: 0.75rem;
@@ -43,9 +50,9 @@ mat-card-content {
 
     .details {
         flex: 1;
-        border: #C8A882 1px solid;
+        border: #684630 0.3cap solid;
         width: fit-content;
-        padding: 2%;
+        padding: 4rem;
         border-radius: 0.5rem;
         align-content: center;
     }
@@ -86,6 +93,8 @@ mat-card-actions {
         .similar-product-card {
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-width: 0.4cap;
+            border-color: #684630;
 
             &:hover {
                 transform: translateY(-0.5rem);
@@ -98,13 +107,12 @@ mat-card-actions {
                 display: flex;
                 justify-content: center !important;
                 align-items: center !important;
-                border-radius: 0.5rem;
-                border: 1px solid #C8A882;
             }
 
             img {
                 width: fit-content;
                 height: 12.5rem;
+                padding: 1rem;
             }
 
             mat-card-content {
