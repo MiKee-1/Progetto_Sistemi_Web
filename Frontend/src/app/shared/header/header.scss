@@ -7,7 +7,6 @@
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     box-shadow: 0 4px 0.7rem rgba(92, 51, 23, 0.4);
-    color: white !important;
 }
 
 .left-section {
@@ -39,7 +38,7 @@
     .mat-mdc-icon-button,
     .MenuButton {
         background-color: rgba(255, 255, 255, 0.15);
-        color: white;
+        color: white !important;
         border: 2px solid rgba(255, 255, 255, 0.3);
         border-radius: 0.5rem;
         margin: 0 4px;
