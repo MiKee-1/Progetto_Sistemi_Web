@@ -35,8 +35,9 @@
     .grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(26%, 1fr));
-        gap: 3rem 2rem; /* row-gap: 1.5rem, column-gap: 2rem */
-        margin-top: 20px;
+        row-gap: 2rem !important;
+        column-gap: 1.5rem !important;
+        margin-top: 1.25rem;
         padding: 0 1rem;
         margin-bottom: 1.5rem;
         
@@ -51,6 +52,7 @@
 
     app-product-card {
         width: 100%;
+        max-height: 30rem !important;
     }
 
     .pagination-bottom{
