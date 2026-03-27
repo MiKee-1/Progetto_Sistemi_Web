@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   include Pagy::Backend
 
   attr_reader :current_user
-
+#prova
   private
 
   def authenticate_request
