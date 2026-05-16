@@ -1,4 +1,4 @@
-# Progetto_Sistemi_Web
+# Progetto_Sistemi_Web e Ingegneria del Software Avanzata
 # E-Commerce Full-Stack - Progetto Sistemi Web 2025/2026
 
 Applicazione e-commerce completa sviluppata con Angular (frontend) e Ruby on Rails (backend API).
