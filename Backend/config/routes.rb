@@ -17,6 +17,12 @@ Rails.application.routes.draw do
     delete 'cart/items/:id', to: 'carts#remove_item'
     delete 'cart', to: 'carts#clear'
 
+    # Wishlist routes
+    get 'wishlist', to: 'wishlists#show'
+    post 'wishlist/items', to: 'wishlists#add_item'
+    delete 'wishlist/items/:id', to: 'wishlists#remove_item'
+    delete 'wishlist', to: 'wishlists#clear'
+
     # Admin routes
     namespace :admin do
       # Product management
