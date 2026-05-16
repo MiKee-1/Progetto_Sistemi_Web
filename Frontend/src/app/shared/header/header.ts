@@ -7,6 +7,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
 import { CartService } from '../../core/services/cart.service';
+import { WishlistService } from '../../core/services/wishlist.service';
 
 @Component({
   selector: 'app-header',
@@ -18,13 +19,14 @@ export class Header {
   private router = inject(Router);
   authService = inject(AuthService);
   cartService = inject(CartService);
+  wishlistService = inject(WishlistService);
 
   currentUser = this.authService.currentUser;
   isLoggedIn = this.authService.isLoggedIn;
   isAdmin = computed(() => this.authService.currentUser()?.role === 'admin');
 
-  // Cart badge
   cartItemCount = this.cartService.itemCount;
+  wishlistItemCount = this.wishlistService.itemCount;
 
   goToCart(): void {
     this.router.navigate(['/cart']);
@@ -54,9 +56,14 @@ export class Header {
     this.router.navigate(['/orders']);
   }
 
+  goToWishlist(): void {
+    this.router.navigate(['/wishlist']);
+  }
+
   logout(): void {
     this.authService.logout();
     this.cartService.resetCart();
+    this.wishlistService.resetWishlist();
     this.router.navigate(['/products']);
   }
 }
