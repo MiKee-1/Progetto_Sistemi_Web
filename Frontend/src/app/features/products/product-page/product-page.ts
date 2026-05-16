@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CartService } from '../../../core/services/cart.service';
+import { WishlistService } from '../../../core/services/wishlist.service';
 import { Router } from '@angular/router';
 
 type Sort = 'priceAsc' | 'priceDesc' | 'dateAsc' | 'dateDesc';
@@ -25,6 +26,7 @@ type Sort = 'priceAsc' | 'priceDesc' | 'dateAsc' | 'dateDesc';
 export class ProductPage {
   private service = inject(ProductApi);
   private cartService = inject(CartService);
+  private wishlistService = inject(WishlistService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
@@ -132,6 +134,35 @@ export class ProductPage {
       }
     });
   }
+  onAddToWishlist(product: Product) {
+    if (this.wishlistService.isInWishlist(product.id)) {
+      const item = this.wishlistService.items().find(i => i.productId === product.id);
+      if (item) {
+        this.wishlistService.removeItem(item.id).subscribe({
+          next: () => this.snackBar.open(`${product.title} rimosso dalla wishlist`, 'Chiudi', { duration: 3000 }),
+          error: () => this.snackBar.open('Errore', 'Chiudi', { duration: 3000 })
+        });
+      }
+      return;
+    }
+
+    this.wishlistService.addToWishlist(product.id).subscribe({
+      next: () => {
+        this.snackBar.open(`${product.title} aggiunto alla wishlist`, 'Vai alla wishlist', {
+          duration: 3000
+        }).onAction().subscribe(() => this.router.navigate(['/wishlist']));
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.snackBar.open('Accedi per usare la wishlist', 'Login', { duration: 5000 })
+            .onAction().subscribe(() => this.router.navigate(['/login']));
+        } else {
+          this.snackBar.open(err.error?.error || 'Errore', 'Chiudi', { duration: 3000 });
+        }
+      }
+    });
+  }
+
   updateSort(sort: Sort) {
     this.page$.next(1); // Reset to first page when sort changes
     this.filters$.next({ ...this.filters$.value, sort: sort });

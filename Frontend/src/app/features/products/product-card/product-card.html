@@ -27,5 +27,11 @@
         <button mat-flat-button color="primary" aria-label="Aggiungi al carrello" (click)="addToCart(product)">
             Carrello
         </button>
+        <button mat-icon-button
+                aria-label="Wishlist"
+                (click)="toggleWishlist(product)"
+                [color]="isInWishlist() ? 'warn' : ''">
+            <mat-icon>{{ isInWishlist() ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
     </mat-card-actions>
 </mat-card>

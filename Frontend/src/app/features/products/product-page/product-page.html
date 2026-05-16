@@ -44,7 +44,7 @@
 
     <div class="grid">
         @for (p of paged$ | async; track p.id) {
-            <app-product-card [product]="p" (add)="onAddToCart($event)">
+            <app-product-card [product]="p" (add)="onAddToCart($event)" (addWishlist)="onAddToWishlist($event)">
             </app-product-card>
         } @empty {
             <p class="empty">Nessun prodotto trovato</p>
