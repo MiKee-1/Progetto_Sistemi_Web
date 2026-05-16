@@ -3,6 +3,7 @@ class User < ApplicationRecord
 
   has_many :orders, dependent: :nullify
   has_one :cart, dependent: :destroy
+  has_one :wishlist, dependent: :destroy
 
   # Validazioni
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 255 }
