@@ -6,21 +6,24 @@ import { Product } from '../../../core/models/product';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CartService } from '../../../core/services/cart.service';
+import { WishlistService } from '../../../core/services/wishlist.service';
 
 @Component({
   selector: 'app-product-detail-page',
   standalone: true,
   templateUrl: './product-detail-page.html',
   styleUrls: ['./product-detail-page.scss'],
-  imports: [RouterModule, AsyncPipe, CurrencyPipe, MatCardModule, MatButtonModule, MatSnackBarModule],
+  imports: [RouterModule, AsyncPipe, CurrencyPipe, MatCardModule, MatButtonModule, MatIconModule, MatSnackBarModule],
 })
 
 export class ProductDetailPage {
   private route = inject(ActivatedRoute);
   private svc = inject(ProductApi);
   private cartService = inject(CartService);
+  wishlistService = inject(WishlistService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
@@ -56,6 +59,35 @@ export class ProductDetailPage {
       return similar.slice(0, 3);
     })
   );
+
+  onToggleWishlist(product: Product) {
+    if (this.wishlistService.isInWishlist(product.id)) {
+      const item = this.wishlistService.items().find(i => i.productId === product.id);
+      if (item) {
+        this.wishlistService.removeItem(item.id).subscribe({
+          next: () => this.snackBar.open('Rimosso dalla wishlist', 'Chiudi', { duration: 3000 }),
+          error: () => this.snackBar.open('Errore', 'Chiudi', { duration: 3000 })
+        });
+      }
+      return;
+    }
+
+    this.wishlistService.addToWishlist(product.id).subscribe({
+      next: () => {
+        this.snackBar.open(`${product.title} aggiunto alla wishlist`, 'Vai alla wishlist', {
+          duration: 3000
+        }).onAction().subscribe(() => this.router.navigate(['/wishlist']));
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.snackBar.open('Accedi per usare la wishlist', 'Login', { duration: 5000 })
+            .onAction().subscribe(() => this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } }));
+        } else {
+          this.snackBar.open(err.error?.error || 'Errore', 'Chiudi', { duration: 3000 });
+        }
+      }
+    });
+  }
 
   onAddToCart(product: Product) {
     // Check stock availability

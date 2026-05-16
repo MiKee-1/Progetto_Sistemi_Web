@@ -43,6 +43,12 @@
                 <button mat-raised-button color="accent" (click)="onAddToCart(product)">
                     Aggiungi al carrello
                 </button>
+                <button mat-raised-button
+                        [color]="wishlistService.isInWishlist(product.id) ? 'warn' : 'primary'"
+                        (click)="onToggleWishlist(product)">
+                    <mat-icon>{{ wishlistService.isInWishlist(product.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
+                    {{ wishlistService.isInWishlist(product.id) ? 'Nella wishlist' : 'Aggiungi alla wishlist' }}
+                </button>
                 <button mat-raised-button color="primary" routerLink="/products">
                     Torna al catalogo
                 </button>
