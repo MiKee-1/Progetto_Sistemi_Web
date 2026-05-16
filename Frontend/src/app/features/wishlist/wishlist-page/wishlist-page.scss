@@ -1,0 +1,156 @@
+.wishlist-container {
+  max-width: 75rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+
+  h1 {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+
+  mat-spinner {
+    margin-bottom: 1rem;
+  }
+}
+
+.error-card,
+.empty-wishlist {
+  text-align: center;
+  padding: 3rem;
+
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+
+    &.empty-icon {
+      font-size: 4.5rem;
+      width: 4.5rem;
+      height: 4.5rem;
+      color: #A08060;
+    }
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  button {
+    margin-top: 1rem;
+  }
+}
+
+.wishlist-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.wishlist-items {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
+  width: 100%;
+  max-width: 50rem;
+}
+
+.wishlist-item {
+  .item-details {
+    display: grid;
+    grid-template-columns: 7rem 1fr auto;
+    align-items: center;
+    gap: 2rem;
+
+    @media (max-width: 47rem) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5rem;
+    width: 12rem;
+    height: 8rem;
+  }
+
+  img {
+    width: fit-content;
+    max-width: 90%;
+    height: fit-content;
+    max-height: 7.8rem;
+    border-radius: 0.5rem;
+  }
+
+  .item-info {
+    h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+    }
+
+    .item-price {
+      color: #7A5C44;
+      margin: 0.25rem 0;
+      font-weight: 500;
+    }
+
+    .original-price {
+      color: #999;
+      text-decoration: line-through;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+  }
+
+  .item-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+}
+
+.wishlist-summary {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+
+  mat-card {
+    width: 100%;
+    max-width: 50rem;
+  }
+
+  mat-card-content {
+    padding: 1.5rem;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    font-size: 1.1rem;
+  }
+
+  mat-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+
+    button {
+      width: 100%;
+    }
+  }
+}

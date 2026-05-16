@@ -1,0 +1,102 @@
+<div class="wishlist-container">
+  <h1>LA TUA WISHLIST</h1>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Caricamento...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <mat-card appearance="outlined" class="error-card">
+      <mat-card-content>
+        <mat-icon color="warn">error</mat-icon>
+        <p>{{ error() }}</p>
+        <button mat-raised-button color="primary" (click)="wishlistService.loadWishlist()">
+          Riprova
+        </button>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (!loading() && isEmpty()) {
+    <mat-card appearance="outlined" class="empty-wishlist">
+      <mat-card-content>
+        <mat-icon class="empty-icon">favorite_border</mat-icon>
+        <h2>La tua wishlist è vuota</h2>
+        <p>Aggiungi prodotti alla tua lista desideri!</p>
+        <button mat-raised-button color="primary" (click)="continueShopping()">
+          Continua lo shopping
+        </button>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (!loading() && !isEmpty()) {
+    <div class="wishlist-content">
+      <div class="wishlist-items">
+        @for (item of items(); track item.id) {
+          <mat-card appearance="outlined" class="wishlist-item">
+            <mat-card-content>
+              <div class="item-details">
+                @if (item.product.thumbnail) {
+                  <div class="image-container">
+                    <img [src]="item.product.thumbnail" [alt]="item.product.title">
+                  </div>
+                }
+
+                <div class="item-info">
+                  <h3>{{ item.product.title }}</h3>
+                  <p class="item-price">{{ item.product.price | currency: 'EUR' }}</p>
+                  @if (item.product.sale) {
+                    <p class="original-price">{{ item.product.originalPrice | currency: 'EUR' }}</p>
+                  }
+                </div>
+
+                <div class="item-actions">
+                  <button mat-raised-button
+                          color="primary"
+                          (click)="moveToCart(item)"
+                          [disabled]="loading()">
+                    <mat-icon>shopping_cart</mat-icon>
+                    Aggiungi al carrello
+                  </button>
+                  <button mat-icon-button
+                          color="warn"
+                          (click)="removeItem(item)"
+                          [disabled]="loading()"
+                          aria-label="Rimuovi dalla wishlist">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    </div>
+
+    <div class="wishlist-summary">
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>Riepilogo Wishlist</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="summary-row">
+            <span>Prodotti salvati</span>
+            <span>{{ itemCount() }}</span>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-stroked-button (click)="continueShopping()">
+            Continua lo shopping
+          </button>
+          <button mat-stroked-button color="warn" (click)="clearWishlist()" [disabled]="loading()">
+            Svuota Wishlist
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  }
+</div>
