@@ -1,5 +1,5 @@
 class Product < ApplicationRecord
-  self.primary_key = 'id'
+  self.primary_key = "id"
 
   validates :title, presence: true, length: { maximum: 200 }
   validates :description, length: { maximum: 2000 }, allow_blank: true
@@ -7,9 +7,9 @@ class Product < ApplicationRecord
   validates :original_price, presence: true, numericality: { greater_than: 0 }
   validates :quantity, presence: true, numericality: { greater_than_or_equal_to: 0, only_integer: true }
 
-  has_many :order_items, dependent: :destroy, foreign_key: 'product_id'
+  has_many :order_items, dependent: :destroy, foreign_key: "product_id"
   has_many :orders, through: :order_items
-  has_many :cart_items, dependent: :destroy, foreign_key: 'product_id'
+  has_many :cart_items, dependent: :destroy, foreign_key: "product_id"
   has_many :carts, through: :cart_items
 
   # Metodi helper per inventario
@@ -38,4 +38,3 @@ class Product < ApplicationRecord
     }
   end
 end
-

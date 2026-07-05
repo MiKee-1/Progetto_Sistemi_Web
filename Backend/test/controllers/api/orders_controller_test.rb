@@ -5,7 +5,7 @@ module Api
     # Helper per generare token JWT per i test
     def generate_token(user)
       payload = { user_id: user.id }
-      JWT.encode(payload, Rails.application.secret_key_base, 'HS256')
+      JWT.encode(payload, Rails.application.secret_key_base, "HS256")
     end
 
     # Test 1: creazione ordine con successo
@@ -38,7 +38,7 @@ module Api
         }
       }
 
-      assert_difference('Order.count', 1) do
+      assert_difference("Order.count", 1) do
         post api_orders_url,
           params: order_params,
           headers: { 'Authorization': "Bearer #{token}" },
@@ -78,7 +78,7 @@ module Api
         }
       }
 
-      assert_no_difference('Order.count') do
+      assert_no_difference("Order.count") do
         post api_orders_url,
           params: order_params,
           headers: { 'Authorization': "Bearer #{token}" },
@@ -87,7 +87,7 @@ module Api
 
       assert_response :unprocessable_entity
       json_response = JSON.parse(response.body)
-      assert_includes json_response['error'], 'insufficient stock'
+      assert_includes json_response["error"], "insufficient stock"
     end
   end
 end
