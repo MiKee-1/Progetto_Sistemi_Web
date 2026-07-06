@@ -7,6 +7,6 @@ class CreateWishlistItems < ActiveRecord::Migration[8.1]
     end
 
     add_foreign_key :wishlist_items, :products, column: :product_id, primary_key: :id
-    add_index :wishlist_items, [:wishlist_id, :product_id], unique: true
+    add_index :wishlist_items, [ :wishlist_id, :product_id ], unique: true
   end
 end
