@@ -1,0 +1,20 @@
+order_item_one:
+  id: 1
+  order_id: 1
+  product_id: "1"
+  quantity: 2
+  unit_price: 99.99
+
+order_item_two:
+  id: 2
+  order_id: 1
+  product_id: "2"
+  quantity: 1
+  unit_price: 49.99
+
+order_item_three:
+  id: 3
+  order_id: 3
+  product_id: "2"
+  quantity: 1
+  unit_price: 49.99

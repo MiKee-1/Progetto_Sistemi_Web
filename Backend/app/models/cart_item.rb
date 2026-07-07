@@ -37,8 +37,7 @@ class CartItem < ApplicationRecord
   end
 
   def quantity_available
-    if product && quantity > product.quantity
-      errors.add(:quantity, "exceeds available stock (#{product.quantity} available)")
-    end
+    return unless product && quantity
+    errors.add(:quantity, "exceeds available stock (#{product.quantity} available)") if quantity > product.quantity
   end
 end

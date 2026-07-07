@@ -4,6 +4,7 @@ class OrderItem < ApplicationRecord
 
   validates :quantity, presence: true, numericality: { greater_than: 0, only_integer: true }
   validates :unit_price, presence: true, numericality: { greater_than: 0 }
+  validates :product_id, uniqueness: { scope: :order_id }
 
   def as_json(options = {})
     {

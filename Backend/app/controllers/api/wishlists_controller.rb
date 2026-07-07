@@ -34,6 +34,8 @@ module Api
     end
 
     def remove_item
+      raise ActiveRecord::RecordNotFound if current_user.wishlist.nil?
+
       wishlist_item = current_user.wishlist.wishlist_items.find(params[:id])
       wishlist_item.destroy!
 

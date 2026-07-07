@@ -1,0 +1,13 @@
+item_one:
+  id: 1
+  cart_id: 1
+  product_id: "1"
+  quantity: 2
+  unit_price: 99.99
+
+item_two:
+  id: 2
+  cart_id: 1
+  product_id: "2"
+  quantity: 1
+  unit_price: 49.99

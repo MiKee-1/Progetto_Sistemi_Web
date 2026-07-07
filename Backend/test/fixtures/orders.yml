@@ -1,0 +1,62 @@
+order_with_user:
+  id: 1
+  user_id: 1
+  total: 249.97
+  customer:
+    firstName: Mario
+    lastName: Rossi
+    email: mario.rossi@example.com
+  address:
+    street: Via Roma 1
+    city: Milano
+    zip: "20100"
+
+order_without_user:
+  id: 2
+  total: 99.99
+  customer:
+    firstName: Guest
+    lastName: User
+    email: guest@example.com
+  address:
+    street: Via Verdi 5
+    city: Roma
+    zip: "00100"
+
+user_order_one:
+  id: 3
+  user_id: 1
+  total: 99.99
+  customer:
+    firstName: Mario
+    lastName: Rossi
+    email: mario.rossi@example.com
+  address:
+    street: Via Roma 1
+    city: Milano
+    zip: "20100"
+
+user_order_two:
+  id: 4
+  user_id: 1
+  total: 249.97
+  customer:
+    firstName: Mario
+    lastName: Rossi
+    email: mario.rossi@example.com
+  address:
+    street: Via Roma 1
+    city: Milano
+    zip: "20100"
+
+guest_order:
+  id: 5
+  total: 49.99
+  customer:
+    firstName: Guest
+    lastName: User
+    email: guest@example.com
+  address:
+    street: Via Verdi 5
+    city: Roma
+    zip: "00100"
