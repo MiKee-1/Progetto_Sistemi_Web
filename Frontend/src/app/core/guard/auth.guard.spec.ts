@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
-import { checkoutGuardGuard } from './checkout-guard-guard';
+import { authGuard } from './auth.guard';
 import { AuthService } from '../services/auth-service';
 
-describe('checkoutGuardGuard', () => {
+describe('authGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>
-    TestBed.runInInjectionContext(() => checkoutGuardGuard(...guardParameters));
+    TestBed.runInInjectionContext(() => authGuard(...guardParameters));
 
   let authService: { isLoggedIn: ReturnType<typeof vi.fn> };
   let router: { createUrlTree: ReturnType<typeof vi.fn> };
@@ -22,12 +22,12 @@ describe('checkoutGuardGuard', () => {
     });
   });
 
-  it('allows access to checkout when the user is logged in', () => {
+  it('allows access when the user is logged in', () => {
     authService.isLoggedIn.mockReturnValue(true);
     expect(executeGuard({} as any, {} as any)).toBe(true);
   });
 
-  it('redirects to /login when the user tries to access checkout unauthenticated', () => {
+  it('redirects to /login when the user is not logged in', () => {
     const loginTree = {} as UrlTree;
     authService.isLoggedIn.mockReturnValue(false);
     router.createUrlTree.mockReturnValue(loginTree);
