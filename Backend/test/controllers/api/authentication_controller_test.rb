@@ -210,5 +210,33 @@ module Api
 
       assert_response :unauthorized
     end
+
+    # ---------------------------------------------------------------------------
+    # Property-based test (Rantly): roundtrip del JWT. Per QUALSIASI payload
+    # (user_id, role, scadenza futura), encode → decode con la stessa chiave
+    # restituisce esattamente i claim originali; con una chiave diversa la
+    # verifica della firma deve SEMPRE fallire.
+    # ---------------------------------------------------------------------------
+
+    test "JWT encode/decode roundtrips any payload and rejects wrong keys (PBT)" do
+      property_of {
+        [ range(1, 1_000_000), choose("user", "admin"), range(1, 10_000) ]
+      }.check(50) do |user_id, role, minutes|
+        exp = minutes.minutes.from_now.to_i
+        payload = { user_id: user_id, role: role, exp: exp }
+        token = JWT.encode(payload, Rails.application.secret_key_base, "HS256")
+
+        decoded = JWT.decode(
+          token, Rails.application.secret_key_base, true, { algorithm: "HS256" }
+        ).first
+        assert_equal user_id, decoded["user_id"]
+        assert_equal role, decoded["role"]
+        assert_equal exp, decoded["exp"]
+
+        assert_raises(JWT::VerificationError) do
+          JWT.decode(token, "wrong-secret", true, { algorithm: "HS256" })
+        end
+      end
+    end
   end
 end

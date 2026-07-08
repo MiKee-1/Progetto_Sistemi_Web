@@ -11,7 +11,7 @@ Applicazione e-commerce completa sviluppata con Angular (frontend) e Ruby on Rai
 - SQLite3 (development), PostgreSQL (production recommended)
 - JWT per autenticazione
 - Pagy per paginazione
-- Minitest per i test, SimpleCov per la coverage
+- Minitest per i test, SimpleCov per la coverage, Rantly per i test property-based
 
 ### Frontend
 - Angular 21
@@ -60,8 +60,8 @@ ng version     # 21.x.x
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/MiKee-1/Progetto_Sistemi_Web
-cd Progetto_Sistemi_Web
+git clone https://github.com/MiKee-1/Progetto_Sistemi_Web_Ing_Sw_Adv
+cd Progetto_Sistemi_Web_Ing_Sw_Adv
 ```
 
 ### 2. Avvio con Docker
@@ -156,7 +156,7 @@ order = Order.create!(
   ]
 )
 
-order.update_column(:creatred_at, 3.days_ago)
+order.update_column(:created_at, 3.days.ago)
 ```
 
 ---
@@ -278,7 +278,7 @@ Dashboard completa con:
   - Backend: `before_action :require_admin!`
   - Frontend: `adminGuard` su route `/admin`
 
-### 2. Filtri avanzati nell'o storico ordini
+### 2. Filtri avanzati nello storico ordini
 
 Possibilità di eseguire ricerche degli ordini con filtri personalizzati
 - **Ricerca del prodotto per nome**
@@ -290,9 +290,9 @@ Possibilità di eseguire ricerche degli ordini con filtri personalizzati
 
 ## Testing
 
-### Backend — Minitest + SimpleCov
+### Backend — Minitest + SimpleCov + Rantly (PBT)
 
-La suite backend conta **187 test** e copre i modelli (validazioni,
+La suite backend conta **190 test** e copre i modelli (validazioni,
 relazioni, callback, serializzazione) e i controller API (test di
 integrazione sull'intero ciclo richiesta → risposta, autenticazione JWT
 inclusa). La suite ha anche trovato e portato alla correzione di un bug
@@ -317,6 +317,16 @@ Al termine SimpleCov genera il report HTML in `Backend/coverage/`
 (aprire `index.html`), con line e branch coverage. I risultati dei
 worker paralleli vengono uniti automaticamente tramite
 `parallelize_setup` / `parallelize_teardown` nel `test_helper.rb`.
+
+**Property-based testing (Rantly).** Oltre ai test a esempi, la suite
+include test property-based: l'helper `property_of` (definito in
+`test_helper.rb`) genera decine di input casuali per ogni proprietà e
+verifica invarianti che devono valere per *qualsiasi* valore, non solo
+per i casi scelti a mano. Le proprietà coperte: `Cart#total` e
+`Cart#item_count` coincidono con le somme su contenuti arbitrari del
+carrello, la validazione di `Product#price` riflette sempre il confine
+dello zero, e il roundtrip JWT (encode → decode) preserva i claim e
+rifiuta firme con chiave errata.
 
 ### Frontend — Vitest + coverage v8
 

@@ -78,4 +78,45 @@ class CartTest < ActiveSupport::TestCase
     cart = Cart.new(user_id: new_user.id)
     assert cart.valid?
   end
+
+  # ---------------------------------------------------------------------------
+  # Property-based tests (Rantly): invece di esempi scelti a mano, verifichiamo
+  # l'invariante su carrelli con contenuti casuali. Prezzi generati in centesimi
+  # e convertiti in BigDecimal per evitare imprecisioni float (colonna :decimal).
+  # ---------------------------------------------------------------------------
+
+  test "total and item_count match the sums for any cart contents (PBT)" do
+    property_of {
+      array(range(1, 4)) { [ range(1, 5), range(1, 100_000) ] }
+    }.check(15) do |items|
+      user = User.create!(
+        email: "pbt-cart-#{SecureRandom.hex(8)}@example.com",
+        password: "password123",
+        first_name: "Pbt",
+        last_name: "Cart",
+        role: "user"
+      )
+      cart = Cart.create!(user: user)
+
+      items.each do |quantity, price_cents|
+        unit_price = BigDecimal(price_cents) / 100
+        product = Product.create!(
+          id: "pbt-cart-#{SecureRandom.hex(8)}",
+          title: "PBT Product",
+          price: unit_price,
+          original_price: unit_price,
+          quantity: quantity
+        )
+        cart.cart_items.create!(product: product, quantity: quantity, unit_price: unit_price)
+      end
+
+      expected_total = items.sum { |quantity, price_cents| quantity * (BigDecimal(price_cents) / 100) }
+      expected_count = items.sum { |quantity, _price_cents| quantity }
+
+      assert_equal expected_total, cart.total,
+        "total should be the sum of quantity * unit_price over #{items.inspect}"
+      assert_equal expected_count, cart.item_count,
+        "item_count should be the sum of quantities over #{items.inspect}"
+    end
+  end
 end
