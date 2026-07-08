@@ -12,8 +12,21 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 
+# Property-based testing via Rantly. Evitiamo "rantly/minitest_extensions"
+# perché in rantly 3.0.0 carica "minitest/unit", rimosso in Minitest 6+.
+# L'extension definisce solo property_of come scorciatoia: lo definiamo qui.
+require "rantly"
+require "rantly/property"
+module PropertyTestHelper
+  def property_of(&block)
+    Rantly::Property.new(block)
+  end
+end
+
 module ActiveSupport
   class TestCase
+    include PropertyTestHelper
+
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
 
