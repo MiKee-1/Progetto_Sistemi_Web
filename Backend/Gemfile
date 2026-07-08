@@ -57,5 +57,8 @@ group :development, :test do
   # Code coverage report for the test suite [https://github.com/simplecov-ruby/simplecov]
   gem "simplecov", require: false
 
+  # Property-based testing for Minitest [https://github.com/rantly-rb/rantly]
+  gem "rantly", require: false
+
   gem "rspec-rails"
 end
