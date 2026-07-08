@@ -8,8 +8,8 @@
 # Job:
 #   1. changes: path filter per saltare i job non pertinenti al diff
 #   2. Backend (Rails 8): lint (Rubocop), security (Brakeman + bundler-audit),
-#      test (Minitest)
-#   3. Frontend (Angular 21): test (Vitest)
+#      test (Minitest + coverage SimpleCov come artefatto)
+#   3. Frontend (Angular 21): test (Vitest + coverage v8 come artefatto)
 #   4. docker-build: builda entrambe le immagini come sanity check (NON pubblica)
 #   5. ci-success: gate aggregato per le branch protection rules
 # =============================================================================
@@ -132,6 +132,14 @@ jobs:
       - name: Run Minitest
         run: bin/rails test
 
+      - name: Upload coverage report (SimpleCov)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage-${{ github.run_id }}
+          path: Backend/coverage/
+          retention-days: 7
+
   # ---------------------------------------------------------------------------
   # Frontend: test (Vitest via ng test)
   # ---------------------------------------------------------------------------
@@ -156,8 +164,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Vitest
-        run: npx ng test --watch=false
+      - name: Run Vitest (with coverage)
+        run: npx ng test --watch=false --coverage
+
+      - name: Upload coverage report (Istanbul)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-${{ github.run_id }}
+          path: Frontend/coverage/
+          retention-days: 7
 
   # ---------------------------------------------------------------------------
   # Docker build: verifica che entrambe le immagini si compilino (NON pubblica)

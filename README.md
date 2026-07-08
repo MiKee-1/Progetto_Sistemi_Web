@@ -11,13 +11,18 @@ Applicazione e-commerce completa sviluppata con Angular (frontend) e Ruby on Rai
 - SQLite3 (development), PostgreSQL (production recommended)
 - JWT per autenticazione
 - Pagy per paginazione
-- RSpec per testing
+- Minitest per i test, SimpleCov per la coverage
 
 ### Frontend
 - Angular 21
 - TypeScript 5.9
 - Angular Material 21
 - RxJS con Signals
+- Vitest per i test unitari (con coverage v8)
+
+### DevOps
+- Docker + Docker Compose per l'ambiente di sviluppo
+- GitHub Actions per la pipeline CI
 
 ## Prerequisiti Software
 
@@ -284,7 +289,77 @@ Possibilità di eseguire ricerche degli ordini con filtri personalizzati
    - possibilità di vedere gli ordini dove si ha speso almeno/al massimo una somma di denaro
 
 ## Testing
- - **Un test su controller e un test su model**
+
+### Backend — Minitest + SimpleCov
+
+La suite backend conta **187 test** e copre i modelli (validazioni,
+relazioni, callback, serializzazione) e i controller API (test di
+integrazione sull'intero ciclo richiesta → risposta, autenticazione JWT
+inclusa). La suite ha anche trovato e portato alla correzione di un bug
+reale: `DELETE /api/wishlist/items/:id` per un utente senza wishlist
+rispondeva 500 invece di 404.
+
+```bash
+cd Backend
+
+# Tutta la suite (in parallelo, default)
+bin/rails test
+
+# Solo modelli o solo controller
+bin/rails test:models
+bin/rails test:controllers
+
+# Con Docker
+docker exec progetto_sistemi_web-backend-1 bin/rails test
+```
+
+Al termine SimpleCov genera il report HTML in `Backend/coverage/`
+(aprire `index.html`), con line e branch coverage. I risultati dei
+worker paralleli vengono uniti automaticamente tramite
+`parallelize_setup` / `parallelize_teardown` nel `test_helper.rb`.
+
+### Frontend — Vitest + coverage v8
+
+La suite frontend conta **193 test in 24 file**: ogni componente e
+servizio ha test reali (auth, carrello, checkout con Reactive Forms,
+wishlist, storico ordini con filtri, dashboard admin con CRUD prodotti,
+guard, interceptor).
+
+```bash
+cd Frontend
+
+# Suite unitaria (watch mode)
+npm test
+
+# Una sola esecuzione + report di coverage
+npm run test:coverage
+```
+
+Il report HTML di coverage finisce in `Frontend/coverage/flowboard/`
+(aprire `index.html`).
+
+## CI/CD
+
+La pipeline CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml))
+gira su ogni Pull Request e su ogni push su `main`. Usa `paths-filter`
+per saltare i job non pertinenti al diff. I job sono:
+
+| Job | Cosa fa |
+|---|---|
+| `changes` | Path filter: stabilisce quali parti del repo sono cambiate |
+| `backend-lint` | Rubocop su tutto il codice backend (0 offense) |
+| `backend-security` | Brakeman (SAST) + bundler-audit (CVE sulle gem) |
+| `backend-test` | Minitest + upload del report SimpleCov come artefatto |
+| `frontend-test` | Vitest con coverage + upload del report come artefatto |
+| `docker-build` | Build (senza push) di entrambe le immagini Docker — sanity check |
+| `ci-success` | Gate finale per le branch protection rules |
+
+I report di coverage restano scaricabili come artefatti della run per
+7 giorni.
+
+Il processo di sviluppo segue la regola: branch → PR → CI verde → merge
+(mai push diretti su `main`), con messaggi in stile
+[Conventional Commits](https://www.conventionalcommits.org/).
 
 
 ## Troubleshooting
