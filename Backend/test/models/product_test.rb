@@ -149,4 +149,32 @@ class ProductTest < ActiveSupport::TestCase
     assert_instance_of Float, json[:price]
     assert_instance_of Float, json[:originalPrice]
   end
+
+  # ---------------------------------------------------------------------------
+  # Property-based test (Rantly): la validazione di price deve riflettere il
+  # confine dello zero per QUALSIASI valore, non solo per gli esempi fissi.
+  # ---------------------------------------------------------------------------
+
+  test "price validation always reflects the zero boundary (PBT)" do
+    # price positivo → nessun errore su :price
+    property_of {
+      range(1, 1_000_000)
+    }.check(50) do |cents|
+      price = BigDecimal(cents) / 100
+      product = Product.new(title: "PBT", price: price, original_price: 10, quantity: 1)
+      product.valid?
+      assert_empty product.errors[:price],
+        "price=#{price.to_s('F')} should not produce errors on :price"
+    end
+
+    # price nullo o negativo → sempre invalido con il messaggio atteso
+    property_of {
+      range(-1_000_000, 0)
+    }.check(50) do |cents|
+      price = BigDecimal(cents) / 100
+      product = Product.new(title: "PBT", price: price, original_price: 10, quantity: 1)
+      assert_not product.valid?, "price=#{price.to_s('F')} should be invalid"
+      assert_includes product.errors[:price], "must be greater than 0"
+    end
+  end
 end
