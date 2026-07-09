@@ -351,13 +351,15 @@ Il report HTML di coverage finisce in `Frontend/coverage/flowboard/`
 
 ### End-to-end — Playwright
 
-Tre spec in `Frontend/e2e/` coprono i flussi principali sull'applicazione
-reale (backend Rails in ambiente test + frontend Angular): autenticazione
-(login del cliente seed e registrazione di un nuovo utente), flusso
-d'acquisto completo (catalogo → carrello → checkout → conferma ordine) e
-wishlist (aggiunta dal catalogo, verifica, rimozione). In locale Playwright
-avvia da solo entrambi i server (blocco `webServer` in
-`playwright.config.ts`, con seed del database di test).
+Quattro spec in `Frontend/e2e/` coprono i flussi principali
+sull'applicazione reale (backend Rails in ambiente test + frontend
+Angular): autenticazione (login del cliente seed e registrazione di un
+nuovo utente), flusso d'acquisto completo (catalogo → carrello → checkout
+→ conferma ordine), wishlist (aggiunta dal catalogo, verifica, rimozione)
+e gestione prodotti admin (ciclo CRUD completo: creazione → modifica →
+eliminazione dalla dashboard). In locale Playwright avvia da solo
+entrambi i server (blocco `webServer` in `playwright.config.ts`, con seed
+del database di test).
 
 ```bash
 cd Frontend
