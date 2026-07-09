@@ -31,6 +31,12 @@ chmod -R 755 /rails 2>/dev/null || true\n\
 # Install missing gems\n\
 bundle check || bundle install\n\
 \n\
+# When starting the server, prepare the database: create it if missing\n\
+# (with seed), then run any pending migration. Idempotent.\n\
+case "$*" in\n\
+  *"rails server"*) ./bin/rails db:prepare ;;\n\
+esac\n\
+\n\
 # Execute the main command\n\
 exec "$@"' > /usr/local/bin/docker-entrypoint.sh && \
     chmod +x /usr/local/bin/docker-entrypoint.sh
