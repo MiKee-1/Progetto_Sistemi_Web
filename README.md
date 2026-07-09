@@ -23,7 +23,8 @@ Applicazione e-commerce completa sviluppata con Angular (frontend) e Ruby on Rai
 
 ### DevOps
 - Docker + Docker Compose per l'ambiente di sviluppo
-- GitHub Actions per la pipeline CI
+- Immagini Docker di produzione multi-stage (frontend servito da nginx)
+- GitHub Actions per la pipeline CI e la release su GitHub Container Registry
 
 ## Prerequisiti Software
 
@@ -67,35 +68,28 @@ cd Progetto_Sistemi_Web_Ing_Sw_Adv
 
 ### 2. Avvio con Docker
 
-#### Step 1: Setup iniziale (solo la prima volta)
+#### Step 1: Avvio applicazione
 
 ```bash
-# Build e avvio dei container in background
-docker compose up -d --build
-
-# Crea il database e le tabelle per il backend
-docker exec progetto_sistemi_web-backend-1 bin/rails db:create
-docker exec progetto_sistemi_web-backend-1 bin/rails db:migrate
-docker exec progetto_sistemi_web-backend-1 bin/rails db:seed
-
-# Installa le dipendenze del frontend
-docker exec progetto_sistemi_web-frontend-1 npm install
-
-# Ferma i container
-docker compose down
+# Build delle immagini e avvio dei container (in modalità attached per vedere i log)
+docker compose up --build
 ```
+
+All'avvio il backend prepara da solo il database (`db:prepare`
+nell'entrypoint): lo crea se non esiste — nel qual caso esegue anche il
+seed — e applica le migration pendenti.
 
 Il seed crea:
 - **1 Admin:** `admin@example.com` / `password123`
 - **2 Utenti:** `user@example.com` / `password123`, `user2@example.com` / `password123`
 - **~50 Prodotti** importati da `Frontend/shop-mock-api/db.json`
 
-#### Step 2: Avvio applicazione
-
-```bash
-# Build delle immagini e avvio dei container (in modalità attached per vedere i log)
-docker compose up --build
-```
+> **Nota:** il seed automatico avviene solo quando il database viene
+> creato da zero. Se un `storage/development.sqlite3` esiste già ma è
+> senza dati (es. creato in passato con il solo `db:migrate`), va
+> popolato una tantum a mano:
+> `docker compose exec backend ./bin/rails db:seed`
+> (attenzione: il seed svuota utenti e prodotti esistenti).
 
 **Nota:** Al primo avvio, attendi che Angular compili completamente (vedrai "Compiled successfully" nei log).
 
@@ -105,7 +99,7 @@ Questo comando:
 - Il backend sarà disponibile su: http://localhost:3000
 - Il frontend sarà disponibile su: http://localhost:4200
 
-#### Step 3: Verifica installazione
+#### Step 2: Verifica installazione
 
 Apri il browser su http://localhost:4200 - dovresti vedere la homepage con i prodotti caricati.
 
@@ -389,7 +383,7 @@ per saltare i job non pertinenti al diff. I job sono:
 | `backend-test` | Minitest + upload del report SimpleCov come artefatto |
 | `frontend-test` | Vitest con coverage + upload del report come artefatto |
 | `e2e` | Playwright su applicazione reale; report HTML come artefatto se fallisce |
-| `docker-build` | Build (senza push) di entrambe le immagini Docker — sanity check |
+| `docker-build` | Build (senza push) delle immagini Docker di produzione — sanity check |
 | `ci-success` | Gate finale per le branch protection rules |
 
 I report di coverage restano scaricabili come artefatti della run per
@@ -398,6 +392,30 @@ I report di coverage restano scaricabili come artefatti della run per
 Il processo di sviluppo segue la regola: branch → PR → CI verde → merge
 (mai push diretti su `main`), con messaggi in stile
 [Conventional Commits](https://www.conventionalcommits.org/).
+
+### Immagini Docker
+
+Ogni componente ha due Dockerfile:
+
+- `Dockerfile.dev` — ambiente di sviluppo, usato da `docker-compose.yml`
+  (Rails in modalità development, Angular con `ng serve` e live reload);
+- `Dockerfile` — immagine di produzione **multi-stage**. Per il frontend:
+  uno stage Node compila il bundle Angular di produzione, lo stage finale
+  è un semplice nginx (con fallback SPA su `index.html`) che serve i file
+  statici: ~64 MB contro oltre 1 GB dell'immagine di sviluppo.
+
+### Release (Continuous Delivery)
+
+Il workflow [`release.yml`](.github/workflows/release.yml) parte al push
+di un tag [SemVer](https://semver.org/) e pubblica le immagini di
+produzione su GitHub Container Registry con il tag della versione e
+`latest`:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+# → ghcr.io/<owner>/shop-backend:1.0.0  e  ghcr.io/<owner>/shop-frontend:1.0.0
+```
 
 
 ## Troubleshooting

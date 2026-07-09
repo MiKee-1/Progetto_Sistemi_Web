@@ -1,0 +1,12 @@
+# Keep the Docker build context small: dependencies are installed from the
+# lockfile inside the image, build/test outputs are never needed in it.
+node_modules
+dist
+coverage
+.angular
+playwright-report
+test-results
+.git
+.vscode
+Dockerfile
+Dockerfile.dev
