@@ -10,8 +10,10 @@
 #   2. Backend (Rails 8): lint (Rubocop), security (Brakeman + bundler-audit),
 #      test (Minitest + coverage SimpleCov come artefatto)
 #   3. Frontend (Angular 21): test (Vitest + coverage v8 come artefatto)
-#   4. docker-build: builda entrambe le immagini come sanity check (NON pubblica)
-#   5. ci-success: gate aggregato per le branch protection rules
+#   4. e2e: test end-to-end Playwright (backend Rails + frontend Angular avviati
+#      nel job, report HTML come artefatto in caso di fallimento)
+#   5. docker-build: builda entrambe le immagini come sanity check (NON pubblica)
+#   6. ci-success: gate aggregato per le branch protection rules
 # =============================================================================
 
 name: CI
@@ -176,6 +178,99 @@ jobs:
           retention-days: 7
 
   # ---------------------------------------------------------------------------
+  # E2E: Playwright su applicazione reale (Rails test env + Angular dev server)
+  # Gira dopo i test unitari; salta se uno di essi è fallito.
+  # ---------------------------------------------------------------------------
+  e2e:
+    name: E2E (Playwright)
+    needs: [changes, backend-test, frontend-test]
+    if: |
+      always()
+      && !cancelled()
+      && !contains(needs.*.result, 'failure')
+      && (needs.changes.outputs.backend == 'true'
+          || needs.changes.outputs.frontend == 'true')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # --- Backend ---
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: Backend
+          bundler-cache: true
+
+      - name: Prepare and seed test database
+        working-directory: Backend
+        env:
+          RAILS_ENV: test
+        run: |
+          bin/rails db:test:prepare
+          bin/rails db:seed
+
+      - name: Start Rails server (background)
+        working-directory: Backend
+        env:
+          RAILS_ENV: test
+        run: |
+          bin/rails server -p 3000 -d
+          # Attende che Rails risponda sulla porta 3000.
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/api/products > /dev/null; then
+              echo "Rails is up"
+              break
+            fi
+            sleep 1
+          done
+
+      # --- Frontend ---
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: Frontend
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: Frontend
+        run: npx playwright install --with-deps chromium
+
+      - name: Start Angular dev server (background)
+        working-directory: Frontend
+        run: |
+          npm start &
+          # Attende che Angular risponda sulla porta 4200.
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:4200 > /dev/null; then
+              echo "Angular is up"
+              break
+            fi
+            sleep 2
+          done
+
+      # --- Suite E2E ---
+      - name: Run Playwright tests
+        working-directory: Frontend
+        env:
+          REUSE_SERVER: '1'   # I server sono già avviati dagli step precedenti
+          CI: '1'
+        run: npx playwright test
+
+      # --- Report in caso di fallimento ---
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: Frontend/playwright-report/
+          retention-days: 7
+
+  # ---------------------------------------------------------------------------
   # Docker build: verifica che entrambe le immagini si compilino (NON pubblica)
   # ---------------------------------------------------------------------------
   docker-build:
@@ -226,6 +321,7 @@ jobs:
       - backend-security
       - backend-test
       - frontend-test
+      - e2e
       - docker-build
     if: always()
     runs-on: ubuntu-latest

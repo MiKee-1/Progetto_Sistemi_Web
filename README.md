@@ -19,6 +19,7 @@ Applicazione e-commerce completa sviluppata con Angular (frontend) e Ruby on Rai
 - Angular Material 21
 - RxJS con Signals
 - Vitest per i test unitari (con coverage v8)
+- Playwright per i test end-to-end
 
 ### DevOps
 - Docker + Docker Compose per l'ambiente di sviluppo
@@ -348,6 +349,32 @@ npm run test:coverage
 Il report HTML di coverage finisce in `Frontend/coverage/flowboard/`
 (aprire `index.html`).
 
+### End-to-end — Playwright
+
+Quattro spec in `Frontend/e2e/` coprono i flussi principali
+sull'applicazione reale (backend Rails in ambiente test + frontend
+Angular): autenticazione (login del cliente seed e registrazione di un
+nuovo utente), flusso d'acquisto completo (catalogo → carrello → checkout
+→ conferma ordine), wishlist (aggiunta dal catalogo, verifica, rimozione)
+e gestione prodotti admin (ciclo CRUD completo: creazione → modifica →
+eliminazione dalla dashboard). In locale Playwright avvia da solo
+entrambi i server (blocco `webServer` in `playwright.config.ts`, con seed
+del database di test).
+
+```bash
+cd Frontend
+
+npm run e2e          # esegue tutta la suite (chromium, avvia i server da solo)
+npm run e2e:ui       # interfaccia interattiva
+npm run e2e:report   # apre l'ultimo report HTML
+
+# Solo la prima volta: scarica il browser usato dai test
+npx playwright install chromium
+```
+
+> In CI la suite gira nel job `e2e` con `REUSE_SERVER=1`: i server vengono
+> avviati esplicitamente dal workflow e Playwright li riusa.
+
 ## CI/CD
 
 La pipeline CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml))
@@ -361,6 +388,7 @@ per saltare i job non pertinenti al diff. I job sono:
 | `backend-security` | Brakeman (SAST) + bundler-audit (CVE sulle gem) |
 | `backend-test` | Minitest + upload del report SimpleCov come artefatto |
 | `frontend-test` | Vitest con coverage + upload del report come artefatto |
+| `e2e` | Playwright su applicazione reale; report HTML come artefatto se fallisce |
 | `docker-build` | Build (senza push) di entrambe le immagini Docker — sanity check |
 | `ci-success` | Gate finale per le branch protection rules |
 
