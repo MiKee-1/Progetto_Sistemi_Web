@@ -12,7 +12,8 @@
 #   3. Frontend (Angular 21): test (Vitest + coverage v8 come artefatto)
 #   4. e2e: test end-to-end Playwright (backend Rails + frontend Angular avviati
 #      nel job, report HTML come artefatto in caso di fallimento)
-#   5. docker-build: builda entrambe le immagini come sanity check (NON pubblica)
+#   5. docker-build: builda entrambe le immagini di produzione come sanity
+#      check (NON pubblica; la pubblicazione su tag è in release.yml)
 #   6. ci-success: gate aggregato per le branch protection rules
 # =============================================================================
 
@@ -53,7 +54,11 @@ jobs:
               - '.github/workflows/ci.yml'
             docker:
               - 'Backend/Dockerfile'
+              - 'Backend/Dockerfile.dev'
               - 'Frontend/Dockerfile'
+              - 'Frontend/Dockerfile.dev'
+              - 'Frontend/nginx.conf'
+              - 'Frontend/.dockerignore'
               - 'docker-compose.yml'
               - '.github/workflows/ci.yml'
 
