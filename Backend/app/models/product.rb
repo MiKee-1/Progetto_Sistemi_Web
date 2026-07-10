@@ -1,6 +1,9 @@
 class Product < ApplicationRecord
   self.primary_key = "id"
 
+  # La chiave primaria è una stringa fornita dal client: senza validazione un id
+  # mancante o duplicato arriverebbe al DB e produrrebbe un 500 invece di un 422.
+  validates :id, presence: true, uniqueness: true
   validates :title, presence: true, length: { maximum: 200 }
   validates :description, length: { maximum: 2000 }, allow_blank: true
   validates :price, presence: true, numericality: { greater_than: 0 }
@@ -11,6 +14,8 @@ class Product < ApplicationRecord
   has_many :orders, through: :order_items
   has_many :cart_items, dependent: :destroy, foreign_key: "product_id"
   has_many :carts, through: :cart_items
+  has_many :wishlist_items, dependent: :destroy, foreign_key: "product_id"
+  has_many :wishlists, through: :wishlist_items
 
   # Metodi helper per inventario
   def in_stock?

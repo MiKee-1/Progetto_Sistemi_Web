@@ -23,6 +23,9 @@ services:
     volumes:
       - ./Frontend:/app
       - /app/node_modules
+      # Volume anonimo: la cache di build di Angular resta nel container,
+      # senza lasciare file di proprietà root nella working copy.
+      - /app/.angular
     depends_on:
       - backend
 

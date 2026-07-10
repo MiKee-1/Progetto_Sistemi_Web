@@ -3,6 +3,7 @@ require "test_helper"
 class ProductTest < ActiveSupport::TestCase
   def valid_attrs(overrides = {})
     {
+      id: "valid-product-test",
       title: "Valid Product",
       description: "A valid product",
       price: 99.99,
@@ -13,6 +14,7 @@ class ProductTest < ActiveSupport::TestCase
 
   test "should be valid with valid attributes" do
     product = Product.new(
+      id: "valid-product-test",
       title: "Valid Product",
       description: "A valid product",
       price: 99.99,
@@ -20,6 +22,18 @@ class ProductTest < ActiveSupport::TestCase
       quantity: 5
     )
     assert product.valid?, "Product should be valid with all required attributes"
+  end
+
+  test "is invalid without id" do
+    product = Product.new(valid_attrs(id: nil))
+    assert_not product.valid?
+    assert product.errors[:id].any?
+  end
+
+  test "is invalid with an already taken id" do
+    product = Product.new(valid_attrs(id: products(:valid_product).id))
+    assert_not product.valid?
+    assert_includes product.errors[:id], "has already been taken"
   end
 
   test "should not be valid with negative price" do

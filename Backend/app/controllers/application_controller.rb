@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   include Pagy::Backend
 
   attr_reader :current_user
-  # prova
+
   private
 
   def authenticate_request
@@ -23,7 +23,11 @@ class ApplicationController < ActionController::API
   end
 
   def require_admin!
-    authenticate_request
-    render json: { error: "Access denied. Admin only." }, status: :forbidden unless current_user&.admin?
+    require_authentication!
+    # Senza questo return chi non è autenticato riceverebbe 403 invece di 401
+    # (e Rails solleverebbe DoubleRenderError sul secondo render).
+    return if performed?
+
+    render json: { error: "Access denied. Admin only." }, status: :forbidden unless current_user.admin?
   end
 end
