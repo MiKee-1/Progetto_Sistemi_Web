@@ -20,6 +20,7 @@ Applicazione e-commerce completa sviluppata con Angular (frontend) e Ruby on Rai
 - RxJS con Signals
 - Vitest per i test unitari (con coverage v8)
 - Playwright per i test end-to-end
+- ESLint (angular-eslint) per il lint di codice e template
 
 ### DevOps
 - Docker + Docker Compose per l'ambiente di sviluppo
@@ -126,16 +127,15 @@ docker compose restart backend
 docker compose restart frontend
 
 # Accedi alla shell del container backend
-docker exec -it progetto_sistemi_web-backend-1 bash
+docker compose exec backend bash
 
 # Esegui comandi Rails
-docker exec progetto_sistemi_web-backend-1 bin/rails console
-docker exec progetto_sistemi_web-backend-1 bin/rails routes
-docker exec progetto_sistemi_web-backend-1 bin/rails db:reset
+docker compose exec backend bin/rails console
+docker compose exec backend bin/rails routes
+docker compose exec backend bin/rails db:reset
 
 # Esegui comandi npm nel frontend
-docker exec progetto_sistemi_web-frontend-1 npm install
-docker exec progetto_sistemi_web-frontend-1 npm run build
+docker compose exec frontend npm install
 ```
 
 
@@ -309,7 +309,7 @@ bin/rails test:models
 bin/rails test:controllers
 
 # Con Docker
-docker exec progetto_sistemi_web-backend-1 bin/rails test
+docker compose exec backend bin/rails test
 ```
 
 Al termine SimpleCov genera il report HTML in `Backend/coverage/`
@@ -385,6 +385,7 @@ per saltare i job non pertinenti al diff. I job sono:
 | `backend-lint` | Rubocop su tutto il codice backend (0 offense) |
 | `backend-security` | Brakeman (SAST) + bundler-audit (CVE sulle gem) |
 | `backend-test` | Minitest + upload del report SimpleCov come artefatto |
+| `frontend-lint` | ESLint su codice TypeScript e template (0 error) |
 | `frontend-test` | Vitest con coverage + upload del report come artefatto |
 | `e2e` | Playwright su applicazione reale; report HTML come artefatto se fallisce |
 | `docker-build` | Build (senza push) delle immagini Docker di produzione — sanity check |
@@ -431,10 +432,10 @@ git push origin v1.0.0
 **Soluzione:**
 ```bash
 # Con Docker
-docker exec progetto_sistemi_web-backend-1 bin/rails db:seed
+docker compose exec backend bin/rails db:seed
 
 # Verifica che i prodotti siano stati caricati
-docker exec progetto_sistemi_web-backend-1 bin/rails runner "puts Product.count"
+docker compose exec backend bin/rails runner "puts Product.count"
 
 # Manuale
 cd Backend
@@ -469,10 +470,11 @@ docker compose up --build
 
 ### Permessi negati su Docker
 
-**Causa:** File creati dal container Docker potrebbero avere permessi diversi dall'utente host.
-
-**Soluzione:**
-La configurazione Docker è stata ottimizzata per gestire automaticamente i permessi. Se riscontri ancora problemi:
+**Causa:** I container di sviluppo girano come root: i file che creano
+nei volumi montati (es. il database SQLite in `Backend/storage/`)
+appartengono a root sull'host. La cache di build di Angular è già
+isolata in un volume anonimo proprio per questo. Se altri file creati
+dai container danno problemi di permessi:
 
 ```bash
 # Ferma i container
