@@ -287,12 +287,16 @@ Possibilità di eseguire ricerche degli ordini con filtri personalizzati
 
 ### Backend — Minitest + SimpleCov + Rantly (PBT)
 
-La suite backend conta **190 test** e copre i modelli (validazioni,
-relazioni, callback, serializzazione) e i controller API (test di
-integrazione sull'intero ciclo richiesta → risposta, autenticazione JWT
-inclusa). La suite ha anche trovato e portato alla correzione di un bug
-reale: `DELETE /api/wishlist/items/:id` per un utente senza wishlist
-rispondeva 500 invece di 404.
+La suite backend conta **213 test** e copre i modelli (validazioni,
+relazioni, callback, serializzazione) e tutti i controller API — inclusi
+gli endpoint admin — con test di integrazione sull'intero ciclo
+richiesta → risposta, autenticazione JWT inclusa. La suite ha anche
+trovato e portato alla correzione di bug reali: `DELETE
+/api/wishlist/items/:id` per un utente senza wishlist rispondeva 500
+invece di 404; gli endpoint admin rispondevano 403 invece di 401 senza
+token; la creazione di un prodotto con id mancante o duplicato
+produceva un 500 invece di un 422; la cancellazione di un prodotto
+presente in una wishlist violava una foreign key (500).
 
 ```bash
 cd Backend
