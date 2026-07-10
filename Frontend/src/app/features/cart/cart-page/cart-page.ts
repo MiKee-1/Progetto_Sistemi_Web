@@ -98,7 +98,7 @@ export class CartPage implements OnInit {
     this.router.navigate(['/products']);
   }
 
-  private showMessage(message: string, isError: boolean = false): void {
+  private showMessage(message: string, isError = false): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
       panelClass: isError ? ['error-snackbar'] : ['success-snackbar']
