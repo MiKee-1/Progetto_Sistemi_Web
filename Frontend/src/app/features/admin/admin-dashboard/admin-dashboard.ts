@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, ViewChild, ElementRef, effect } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { CommonModule } from '@angular/common';
+
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatButton, MatIconButton } from '@angular/material/button';
@@ -15,7 +15,6 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { AdminService, AdminStats, OrdersResponse } from '../../../core/services/admin.service';
 import { ProductApi } from '../../../core/services/product-api';
 import { Product } from '../../../core/models/product';
-import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { Order } from '../../../core/models/order';
@@ -23,7 +22,6 @@ import { Order } from '../../../core/models/order';
 @Component({
   selector: 'app-admin-dashboard',
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatTabsModule,
@@ -51,8 +49,8 @@ import { Order } from '../../../core/models/order';
     MatInput,
     MatExpansionModule,
     MatDividerModule,
-    MatChipsModule,
-  ],
+    MatChipsModule
+],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.scss',
 })
@@ -251,7 +249,10 @@ export class AdminDashboard implements OnInit {
   }
 
   // Orders Management
-  onDeleteOrder(id: number): void {
+  // id è opzionale perché Order.id lo è (gli ordini in dashboard, arrivando
+  // dall'API, ce l'hanno sempre)
+  onDeleteOrder(id?: number): void {
+    if (id === undefined) return;
     if (confirm('Are you sure you want to delete this order?')) {
       this.adminService.deleteOrder(id).subscribe({
         next: () => {
@@ -279,7 +280,7 @@ export class AdminDashboard implements OnInit {
     });
   }
 
-  private getDailyChartData(orders: any[]): { labels: string[]; counts: number[]; revenues: number[] } {
+  private getDailyChartData(orders: Order[]): { labels: string[]; counts: number[]; revenues: number[] } {
     const map = new Map<string, { count: number; revenue: number }>();
 
     for (const order of orders) {
@@ -287,7 +288,7 @@ export class AdminDashboard implements OnInit {
       const existing = map.get(key) ?? { count: 0, revenue: 0 };
       map.set(key, {
         count: existing.count + 1,
-        revenue: existing.revenue + parseFloat(order.total),
+        revenue: existing.revenue + order.total,
       });
     }
 
@@ -305,7 +306,7 @@ export class AdminDashboard implements OnInit {
     };
   }
 
-  private initCharts(orders: any[]): void {
+  private initCharts(orders: Order[]): void {
     if (!this.ordersChartRef || !this.revenueChartRef) return;
 
     const { labels, counts, revenues } = this.getDailyChartData(orders);

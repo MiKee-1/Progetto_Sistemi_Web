@@ -7,7 +7,6 @@ import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { AsyncPipe } from '@angular/common';
 import { BehaviorSubject, map, debounceTime, distinctUntilChanged, switchMap, combineLatest, shareReplay } from 'rxjs';
-import { PaginatedProducts } from '../../../core/services/product-api';
 import { MatSelectModule } from '@angular/material/select';
 import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';

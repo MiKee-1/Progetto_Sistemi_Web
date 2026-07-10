@@ -1,5 +1,5 @@
 export interface Product {
-discountPercentage: any;
+discountPercentage: number;
     id: string;
     title: string;
     description: string;

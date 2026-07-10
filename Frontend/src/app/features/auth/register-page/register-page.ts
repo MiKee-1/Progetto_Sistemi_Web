@@ -59,7 +59,7 @@ export class RegisterPage {
     this.hidePassword.update(value => !value);
   }
 
-passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
+passwordMatchValidator(control: AbstractControl): Record<string, boolean> | null {
     const password = control.get('password');
     const confirmPassword = control.get('password_confirmation');
 
@@ -76,7 +76,7 @@ passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | n
       this.error.set(null);
 
       this.authService.register(this.registerForm.value).subscribe({
-        next: (response) => {
+        next: () => {
           this.loading.set(false);
           // Load cart after successful registration
           this.cartService.loadCart();

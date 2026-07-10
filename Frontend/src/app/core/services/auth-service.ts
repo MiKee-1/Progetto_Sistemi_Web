@@ -1,12 +1,14 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap, BehaviorSubject } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { User, AuthResponse, LoginRequest, RegisterRequest } from '../models/user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private readonly http = inject(HttpClient);
+
   private readonly baseUrl = 'http://localhost:3000/api';
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'current_user';
@@ -14,8 +16,6 @@ export class AuthService {
   // Signal per stato reattivo
   currentUser = signal<User | null>(this.getUserFromStorage());
   isLoggedIn = signal<boolean>(!!this.getToken());
-
-  constructor(private readonly http: HttpClient) {}
 
   // Registrazione
   register(request: RegisterRequest): Observable<AuthResponse> {

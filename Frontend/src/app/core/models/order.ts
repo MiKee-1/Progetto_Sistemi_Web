@@ -1,4 +1,5 @@
 import { Product } from './product';
+import { User } from './user';
 
 export interface Customer {
     firstName: string | null;
@@ -31,6 +32,8 @@ export interface Order {
     orderItems?: OrderItem[];
     total: number;
     userId?: number;
+    // Presente solo negli ordini non-guest (il backend lo aggiunge in as_json)
+    user?: User;
     createdAt: string;
     updatedAt?: string;
 }

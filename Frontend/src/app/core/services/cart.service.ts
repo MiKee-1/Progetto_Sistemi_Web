@@ -1,13 +1,21 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, of } from 'rxjs';
-import { Cart, CartItem, AddToCartRequest, UpdateCartItemRequest } from '../models/cart';
+import { Cart, AddToCartRequest, UpdateCartItemRequest } from '../models/cart';
 import { AuthService } from './auth-service';
+
+interface CartResponse {
+  message: string;
+  cart: Cart;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+
   private readonly baseUrl = 'http://localhost:3000/api';
 
   // Signal-based state management
@@ -26,7 +34,7 @@ export class CartService {
   items = computed(() => this.cartSignal()?.items ?? []);
   isEmpty = computed(() => (this.cartSignal()?.items?.length ?? 0) === 0);
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor() {
     // Load cart only if user is authenticated
     if (this.authService.isLoggedIn()) {
       this.loadCart();
@@ -61,7 +69,7 @@ export class CartService {
   /**
    * Add product to cart
    */
-  addToCart(productId: string, quantity: number = 1): Observable<any> {
+  addToCart(productId: string, quantity = 1): Observable<CartResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
@@ -70,7 +78,7 @@ export class CartService {
       quantity: quantity
     };
 
-    return this.http.post<any>(`${this.baseUrl}/cart/items`, request).pipe(
+    return this.http.post<CartResponse>(`${this.baseUrl}/cart/items`, request).pipe(
       tap(response => {
         this.cartSignal.set(response.cart);
         this.loadingSignal.set(false);
@@ -87,13 +95,13 @@ export class CartService {
   /**
    * Update cart item quantity
    */
-  updateQuantity(itemId: number, quantity: number): Observable<any> {
+  updateQuantity(itemId: number, quantity: number): Observable<CartResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
     const request: UpdateCartItemRequest = { quantity };
 
-    return this.http.patch<any>(`${this.baseUrl}/cart/items/${itemId}`, request).pipe(
+    return this.http.patch<CartResponse>(`${this.baseUrl}/cart/items/${itemId}`, request).pipe(
       tap(response => {
         this.cartSignal.set(response.cart);
         this.loadingSignal.set(false);
@@ -110,14 +118,14 @@ export class CartService {
   /**
    * Increase item quantity by 1
    */
-  incrementQuantity(itemId: number, currentQuantity: number): Observable<any> {
+  incrementQuantity(itemId: number, currentQuantity: number): Observable<CartResponse> {
     return this.updateQuantity(itemId, currentQuantity + 1);
   }
 
   /**
    * Decrease item quantity by 1
    */
-  decrementQuantity(itemId: number, currentQuantity: number): Observable<any> {
+  decrementQuantity(itemId: number, currentQuantity: number): Observable<CartResponse> {
     if (currentQuantity <= 1) {
       return this.removeItem(itemId);
     }
@@ -127,11 +135,11 @@ export class CartService {
   /**
    * Remove item from cart
    */
-  removeItem(itemId: number): Observable<any> {
+  removeItem(itemId: number): Observable<CartResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    return this.http.delete<any>(`${this.baseUrl}/cart/items/${itemId}`).pipe(
+    return this.http.delete<CartResponse>(`${this.baseUrl}/cart/items/${itemId}`).pipe(
       tap(response => {
         this.cartSignal.set(response.cart);
         this.loadingSignal.set(false);
@@ -148,11 +156,11 @@ export class CartService {
   /**
    * Clear entire cart
    */
-  clearCart(): Observable<any> {
+  clearCart(): Observable<CartResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    return this.http.delete<any>(`${this.baseUrl}/cart`).pipe(
+    return this.http.delete<CartResponse>(`${this.baseUrl}/cart`).pipe(
       tap(response => {
         this.cartSignal.set(response.cart);
         this.loadingSignal.set(false);
