@@ -9,7 +9,7 @@
 #   1. changes: path filter per saltare i job non pertinenti al diff
 #   2. Backend (Rails 8): lint (Rubocop), security (Brakeman + bundler-audit),
 #      test (Minitest + coverage SimpleCov come artefatto)
-#   3. Frontend (Angular 21): test (Vitest + coverage v8 come artefatto)
+#   3. Frontend (Angular 21): lint (ESLint), test (Vitest + coverage v8 come artefatto)
 #   4. e2e: test end-to-end Playwright (backend Rails + frontend Angular avviati
 #      nel job, report HTML come artefatto in caso di fallimento)
 #   5. docker-build: builda entrambe le immagini di produzione come sanity
@@ -150,6 +150,30 @@ jobs:
   # ---------------------------------------------------------------------------
   # Frontend: test (Vitest via ng test)
   # ---------------------------------------------------------------------------
+  frontend-lint:
+    name: Frontend lint (ESLint)
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Frontend
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npx ng lint
+
   frontend-test:
     name: Frontend test (Vitest)
     needs: changes
@@ -325,6 +349,7 @@ jobs:
       - backend-lint
       - backend-security
       - backend-test
+      - frontend-lint
       - frontend-test
       - e2e
       - docker-build

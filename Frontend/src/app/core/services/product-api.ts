@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Product } from '../models/product';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -23,9 +23,9 @@ export interface PaginatedProducts {
   providedIn: 'root',
 })
 export class ProductApi {
-  private readonly baseUrl = 'http://localhost:3000/api';
+  private readonly http = inject(HttpClient);
 
-  constructor(private readonly http: HttpClient) { }
+  private readonly baseUrl = 'http://localhost:3000/api';
 
   list(filters?: ProductFilters): Observable<PaginatedProducts> {
     let params = new HttpParams();

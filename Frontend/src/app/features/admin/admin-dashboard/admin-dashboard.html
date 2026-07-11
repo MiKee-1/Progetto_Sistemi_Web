@@ -147,7 +147,7 @@
                   [matChipInputFor]="chipGrid"
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                   (matChipInputTokenEnd)="addTag($event)"
-                />
+                  />
                 <mat-hint>Premi Enter o , per aggiungere un tag</mat-hint>
               </mat-form-field>
 
@@ -251,99 +251,103 @@
 
           <div class="orders-list">
             <!-- Nessun ordine -->
-            <mat-card *ngIf="orders()!.orders.length === 0" class="empty-state">
-              <mat-card-content>
-                <mat-icon>shopping_bag</mat-icon>
-                <h2>No orders found</h2>
-                <p>There are no orders in the system yet.</p>
-              </mat-card-content>
-            </mat-card>
+            @if (orders()!.orders.length === 0) {
+              <mat-card class="empty-state">
+                <mat-card-content>
+                  <mat-icon>shopping_bag</mat-icon>
+                  <h2>No orders found</h2>
+                  <p>There are no orders in the system yet.</p>
+                </mat-card-content>
+              </mat-card>
+            }
 
             <!-- Accordion con gli ordini -->
-            <mat-accordion *ngIf="orders()!.orders.length > 0" class="orders-accordion">
-              <mat-expansion-panel *ngFor="let order of orders()!.orders" class="order-panel">
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    <div class="order-header">
-                      <span class="order-id">#{{ order.id }}</span>
-                      <span class="order-date">{{ formatOrderDate(order.createdAt) }}</span>
-                    </div>
-                  </mat-panel-title>
-                  <mat-panel-description>
-                    <div class="order-summary">
-                      <span class="order-items-badge">{{ getOrderItemsCount(order) }} items</span>
-                      <span class="order-total">€{{ order.total }}</span>
-                    </div>
-                  </mat-panel-description>
-                </mat-expansion-panel-header>
-
-                <!-- Dettagli ordine -->
-                <div class="order-details">
-                  <div class="details-grid">
-                    <!-- Informazioni cliente -->
-                    <div class="info-card">
-                      <div class="info-card-header">
-                        <mat-icon>person</mat-icon>
-                        <h3>Customer</h3>
-                      </div>
-                      <div class="info-card-content">
-                        @if (order.user) {
-                          <p class="customer-name">{{ order.user.firstName || 'N/A' }} {{ order.user.lastName || '' }}</p>
-                          <p class="customer-email">{{ order.user.email || 'N/A' }}</p>
-                          <p class="customer-type"><span class="badge registered">Registered</span></p>
-                        } @else {
-                          <p class="customer-name">{{ order.customer?.firstName || 'N/A' }} {{ order.customer?.lastName || '' }}</p>
-                          <p class="customer-email">{{ order.customer?.email || 'N/A' }}</p>
-                          <p class="customer-type"><span class="badge registered">Registered</span></p>
-                        }
-                      </div>
-                    </div>
-
-                    <!-- Indirizzo di spedizione -->
-                    <div class="info-card">
-                      <div class="info-card-header">
-                        <mat-icon>location_on</mat-icon>
-                        <h3>Shipping</h3>
-                      </div>
-                      <div class="info-card-content">
-                        <p>{{ order.address?.street || 'N/A' }}</p>
-                        <p>{{ order.address?.city || 'N/A' }}, {{ order.address?.zip || 'N/A' }}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Prodotti ordinati -->
-                  <div class="products-section">
-                    <div class="products-header">
-                      <mat-icon>inventory_2</mat-icon>
-                      <h3>Order Items</h3>
-                    </div>
-                    <div class="order-items-list">
-                      <div *ngFor="let item of order.orderItems" class="order-item">
-                        <div class="item-info">
-                          <span class="item-name">{{ item.product?.title || 'Product #' + item.productId }}</span>
-                          <span class="item-quantity">x{{ item.quantity }}</span>
+            @if (orders()!.orders.length > 0) {
+              <mat-accordion class="orders-accordion">
+                @for (order of orders()!.orders; track order) {
+                  <mat-expansion-panel class="order-panel">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        <div class="order-header">
+                          <span class="order-id">#{{ order.id }}</span>
+                          <span class="order-date">{{ formatOrderDate(order.createdAt) }}</span>
                         </div>
-                        <span class="item-price">€{{ (item.unitPrice * item.quantity).toFixed(2) }}</span>
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        <div class="order-summary">
+                          <span class="order-items-badge">{{ getOrderItemsCount(order) }} items</span>
+                          <span class="order-total">€{{ order.total }}</span>
+                        </div>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <!-- Dettagli ordine -->
+                    <div class="order-details">
+                      <div class="details-grid">
+                        <!-- Informazioni cliente -->
+                        <div class="info-card">
+                          <div class="info-card-header">
+                            <mat-icon>person</mat-icon>
+                            <h3>Customer</h3>
+                          </div>
+                          <div class="info-card-content">
+                            @if (order.user) {
+                              <p class="customer-name">{{ order.user.firstName || 'N/A' }} {{ order.user.lastName || '' }}</p>
+                              <p class="customer-email">{{ order.user.email || 'N/A' }}</p>
+                              <p class="customer-type"><span class="badge registered">Registered</span></p>
+                            } @else {
+                              <p class="customer-name">{{ order.customer?.firstName || 'N/A' }} {{ order.customer?.lastName || '' }}</p>
+                              <p class="customer-email">{{ order.customer?.email || 'N/A' }}</p>
+                              <p class="customer-type"><span class="badge registered">Registered</span></p>
+                            }
+                          </div>
+                        </div>
+                        <!-- Indirizzo di spedizione -->
+                        <div class="info-card">
+                          <div class="info-card-header">
+                            <mat-icon>location_on</mat-icon>
+                            <h3>Shipping</h3>
+                          </div>
+                          <div class="info-card-content">
+                            <p>{{ order.address?.street || 'N/A' }}</p>
+                            <p>{{ order.address?.city || 'N/A' }}, {{ order.address?.zip || 'N/A' }}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Prodotti ordinati -->
+                      <div class="products-section">
+                        <div class="products-header">
+                          <mat-icon>inventory_2</mat-icon>
+                          <h3>Order Items</h3>
+                        </div>
+                        <div class="order-items-list">
+                          @for (item of order.orderItems; track item) {
+                            <div class="order-item">
+                              <div class="item-info">
+                                <span class="item-name">{{ item.product?.title || 'Product #' + item.productId }}</span>
+                                <span class="item-quantity">x{{ item.quantity }}</span>
+                              </div>
+                              <span class="item-price">€{{ (item.unitPrice * item.quantity).toFixed(2) }}</span>
+                            </div>
+                          }
+                        </div>
+                        <!-- Totale -->
+                        <div class="total-row">
+                          <span class="total-label">Order Total</span>
+                          <span class="total-amount">€{{ order.total }}</span>
+                        </div>
+                      </div>
+                      <!-- Admin Actions -->
+                      <div class="admin-actions">
+                        <button mat-raised-button color="warn" (click)="onDeleteOrder(order.id)">
+                          <mat-icon>delete</mat-icon>
+                          Delete Order
+                        </button>
                       </div>
                     </div>
-                    <!-- Totale -->
-                    <div class="total-row">
-                      <span class="total-label">Order Total</span>
-                      <span class="total-amount">€{{ order.total }}</span>
-                    </div>
-                  </div>
-
-                  <!-- Admin Actions -->
-                  <div class="admin-actions">
-                    <button mat-raised-button color="warn" (click)="onDeleteOrder(order.id)">
-                      <mat-icon>delete</mat-icon>
-                      Delete Order
-                    </button>
-                  </div>
-                </div>
-              </mat-expansion-panel>
-            </mat-accordion>
+                  </mat-expansion-panel>
+                }
+              </mat-accordion>
+            }
           </div>
         } @else {
           <div class="loading-container">

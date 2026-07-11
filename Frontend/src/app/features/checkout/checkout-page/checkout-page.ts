@@ -4,7 +4,7 @@ import { inject } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { CommonModule } from '@angular/common';
+
 import { MatOption, MatSelect } from '@angular/material/select';
 import { CartService } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order-service';
@@ -12,7 +12,7 @@ import { Order } from '../../../core/models/order';
 
 @Component({
   selector: 'app-checkout-page',
-  imports: [CommonModule, ReactiveFormsModule, MatSelect, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatOption],
+  imports: [ReactiveFormsModule, MatSelect, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatOption],
   templateUrl: './checkout-page.html',
   styleUrl: './checkout-page.scss',
 })

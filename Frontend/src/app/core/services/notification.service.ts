@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  constructor(private snackBar: MatSnackBar) {}
+  private snackBar = inject(MatSnackBar);
 
-  showError(message: string, duration: number = 5000): void {
+
+  showError(message: string, duration = 5000): void {
     this.snackBar.open(message, 'Chiudi', {
       duration,
       panelClass: ['error-snackbar'],
@@ -16,7 +17,7 @@ export class NotificationService {
     });
   }
 
-  showSuccess(message: string, duration: number = 3000): void {
+  showSuccess(message: string, duration = 3000): void {
     this.snackBar.open(message, 'Chiudi', {
       duration,
       panelClass: ['success-snackbar'],
@@ -25,7 +26,7 @@ export class NotificationService {
     });
   }
 
-  showWarning(message: string, duration: number = 4000): void {
+  showWarning(message: string, duration = 4000): void {
     this.snackBar.open(message, 'Chiudi', {
       duration,
       panelClass: ['warning-snackbar'],

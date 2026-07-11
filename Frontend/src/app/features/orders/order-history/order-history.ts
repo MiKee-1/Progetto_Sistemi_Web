@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +18,6 @@ import { Order } from '../../../core/models/order';
   selector: 'app-order-history',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatCardModule,
     MatButtonModule,
@@ -30,7 +29,7 @@ import { Order } from '../../../core/models/order';
     MatDatepickerModule,
     MatNativeDateModule,
     MatExpansionModule
-  ],
+],
   templateUrl: './order-history.html',
   styleUrl: './order-history.scss',
 })
@@ -46,7 +45,7 @@ export class OrderHistoryPage implements OnInit {
   endDate: Date | null = null;
   minTotal: number | null = null;
   maxTotal: number | null = null;
-  productTitle: string = '';
+  productTitle = '';
 
   ngOnInit(): void {
     this.loadOrders();

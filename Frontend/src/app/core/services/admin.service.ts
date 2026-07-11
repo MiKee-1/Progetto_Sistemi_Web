@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../models/product';
+import { Order } from '../models/order';
 
 export interface AdminStats {
   total_orders: number;
@@ -9,11 +10,11 @@ export interface AdminStats {
   total_users: number;
   total_products: number;
   low_stock_products: number;
-  recent_orders: any[];
+  recent_orders: Order[];
 }
 
 export interface OrdersResponse {
-  orders: any[];
+  orders: Order[];
   stats: {
     total_orders: number;
     total_revenue: number;
@@ -28,9 +29,9 @@ export interface OrdersResponse {
   providedIn: 'root',
 })
 export class AdminService {
-  private readonly baseUrl = 'http://localhost:3000/api/admin';
+  private readonly http = inject(HttpClient);
 
-  constructor(private readonly http: HttpClient) {}
+  private readonly baseUrl = 'http://localhost:3000/api/admin';
 
   // Products Management
   createProduct(product: Partial<Product>): Observable<{ message: string; product: Product }> {
@@ -64,8 +65,8 @@ export class AdminService {
     return this.http.get<OrdersResponse>(url);
   }
 
-  getOrderById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/orders/${id}`);
+  getOrderById(id: number): Observable<Order> {
+    return this.http.get<Order>(`${this.baseUrl}/orders/${id}`);
   }
 
   deleteOrder(id: number): Observable<{ message: string }> {

@@ -1,13 +1,21 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, of } from 'rxjs';
 import { Wishlist, AddToWishlistRequest } from '../models/wishlist';
 import { AuthService } from './auth-service';
 
+interface WishlistResponse {
+  message: string;
+  wishlist: Wishlist;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class WishlistService {
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+
   private readonly baseUrl = 'http://localhost:3000/api';
 
   private wishlistSignal = signal<Wishlist | null>(null);
@@ -22,7 +30,7 @@ export class WishlistService {
   items = computed(() => this.wishlistSignal()?.items ?? []);
   isEmpty = computed(() => (this.wishlistSignal()?.items?.length ?? 0) === 0);
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor() {
     if (this.authService.isLoggedIn()) {
       this.loadWishlist();
     }
@@ -48,13 +56,13 @@ export class WishlistService {
     ).subscribe();
   }
 
-  addToWishlist(productId: string): Observable<any> {
+  addToWishlist(productId: string): Observable<WishlistResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
     const request: AddToWishlistRequest = { product_id: productId };
 
-    return this.http.post<any>(`${this.baseUrl}/wishlist/items`, request).pipe(
+    return this.http.post<WishlistResponse>(`${this.baseUrl}/wishlist/items`, request).pipe(
       tap(response => {
         this.wishlistSignal.set(response.wishlist);
         this.loadingSignal.set(false);
@@ -68,11 +76,11 @@ export class WishlistService {
     );
   }
 
-  removeItem(itemId: number): Observable<any> {
+  removeItem(itemId: number): Observable<WishlistResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    return this.http.delete<any>(`${this.baseUrl}/wishlist/items/${itemId}`).pipe(
+    return this.http.delete<WishlistResponse>(`${this.baseUrl}/wishlist/items/${itemId}`).pipe(
       tap(response => {
         this.wishlistSignal.set(response.wishlist);
         this.loadingSignal.set(false);
@@ -86,11 +94,11 @@ export class WishlistService {
     );
   }
 
-  clearWishlist(): Observable<any> {
+  clearWishlist(): Observable<WishlistResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    return this.http.delete<any>(`${this.baseUrl}/wishlist`).pipe(
+    return this.http.delete<WishlistResponse>(`${this.baseUrl}/wishlist`).pipe(
       tap(response => {
         this.wishlistSignal.set(response.wishlist);
         this.loadingSignal.set(false);
